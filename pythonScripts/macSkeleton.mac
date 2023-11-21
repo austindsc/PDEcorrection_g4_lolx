@@ -1,0 +1,20 @@
+/vis/verbose 0
+/tracking/verbose 0
+/event/verbose 0
+/process/had/verbose 0
+/run/verbose 0
+/particle/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+/process/optical/verbose 1
+#/process/optical/scintillation/verbose 1
+
+          # 1 outputs event level data
+
+## process toggling (some outdated?) ##
+/process/optical/processActivation OpRayleigh false
+/process/optical/processActivation OpAbsorption false
+/process/optical/processActivation OpBoundary true
+/process/optical/processActivation OpMieHG false
+/process/optical/processActivation OpWLS false

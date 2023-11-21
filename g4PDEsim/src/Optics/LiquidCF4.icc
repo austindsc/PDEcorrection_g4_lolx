@@ -1,0 +1,14 @@
+// helper file to do optics of Gas CF4.
+// Same scope as in DetectorMaterials::BuildMaterials()
+
+G4MaterialPropertiesTable *mpt_liquidCF4 = new G4MaterialPropertiesTable();
+mLiquidCF4->SetMaterialPropertiesTable(mpt_liquidCF4);
+
+
+//------- Refractive Indexes ------- //
+// taken from literature with many different densities
+// french paper (7, 5eV), other two from second paper
+G4double liq_cf4_photonE[4] = {7*eV, 5*eV, 2*eV, 1*eV}; 
+G4double liq_cf4_n[4] = {1.24, 1.225, 1.21, 1.2039};
+mpt_liquidCF4->AddProperty("RINDEX", liq_cf4_photonE, liq_cf4_n, 4);
+

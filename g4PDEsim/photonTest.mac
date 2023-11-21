@@ -1,0 +1,20 @@
+# this produces many photons from all over a disk
+
+
+/gps/particle opticalphoton
+/gps/energy 5 eV
+/gps/pos/type Point
+/gps/number 1
+
+#/gps/pos/centre 0. 0. -0.5 cm # photons out
+#/gps/direction 0. 1 1 
+
+/gps/pos/centre 0. 0. 1 cm # photons in
+/gps/direction 0. 1. -1 
+
+/analysis/setFileName photonTest2
+#/analysis/ntuple/setFileName 0 anotherNameIWant3
+
+#/run/initialize
+
+/run/beamOn 1

@@ -1,0 +1,12 @@
+// helper file to do optics of Gas CF4.
+// Same scope as in DetectorMaterials::BuildMaterials()
+
+G4MaterialPropertiesTable *mpt_gascf4 = new G4MaterialPropertiesTable();
+mGasCF4->SetMaterialPropertiesTable(mpt_gascf4);
+
+/////////// ------- Refractive Indexes ------- ///////////
+
+// refractive indexes taken from 
+G4double gas_cf4_photonE[2] = {1239.841939*eV/140, 1239.841939*eV/1200};
+G4double gas_cf4_n[2] = {1.2, 1.1};
+mpt_gascf4->AddProperty("RINDEX", gas_cf4_photonE, gas_cf4_n, 2);    //2 is for length of arrays

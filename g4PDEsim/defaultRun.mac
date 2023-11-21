@@ -1,0 +1,60 @@
+# Macro file for the initialization of example CF4
+# in interactive session
+
+## Verbosities ##
+
+#/run/numberOfThreads 1 # defaults to zero
+
+/vis/verbose 0
+/tracking/verbose 0
+/event/verbose 0
+/process/had/verbose 0
+/run/verbose 0
+/particle/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+/process/optical/verbose 1
+#/process/optical/scintillation/verbose 1
+
+
+### Material Properties ###
+#/setMaterial/detectionMedium gCF4        # default is gas
+#/setMaterial/detectionMedium gAr         # currently undefined
+/setMaterial/detectionMedium lCF4         # see Optics/material for default LYs
+
+# not implemented
+#/setMaterial/mediumDensity 1.69 g/cm3  # use this to set density directly. Takes precendece over density calculated by SetTemp. default densities given in DetectorMaterials.cc
+#/setMaterial/mediumTemp 128 kelvin        # this alone sets density based on saturation curve data (gas or liquid CF4)
+#/setMaterial/mediumPressure 10.7 bar      # If pressure also set, and sim is built with REFPROP (default), 
+                                          # then REFPROP is used to calculate density with T, P for pure CF4
+
+
+### detector configuration ###
+/setDetector/myVerbosity 1                # 1 outputs event level data
+                                          # 2 some photon level data, all data that is used
+                                          # -1 means fill ntuple regardless (good for optical photon testing where eDep == 0)
+
+# or load anything you want here
+#/control/execute ../mySim/livePhotonTest.mac
+
+## process toggling (some outdated?) ##
+# probably don't want to control these from here
+/process/optical/processActivation OpRayleigh false
+/process/optical/processActivation OpAbsorption false
+/process/optical/processActivation OpBoundary true
+/process/optical/processActivation OpMieHG false
+/process/optical/processActivation OpWLS false
+
+### Naming Output ###
+/analysis/setFileName testNaming2                  # use either of these functions. whatever is last overrides
+#/analysis/ntuple/setFileName 0 anotherNameIWant   # this doesn't work anymore bc ntuple is made in BeginRunAction
+
+### Initialize kernel (build detector) ###
+/run/initialize
+
+### no visualization ###
+#/run/beamOn 10
+
+### run visualization ###
+/control/execute ../g4PDEsim/myVis.mac

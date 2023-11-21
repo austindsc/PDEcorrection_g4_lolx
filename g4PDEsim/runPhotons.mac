@@ -1,0 +1,28 @@
+# this produces many photons from all over a disk
+
+/vis/verbose 0
+/tracking/verbose 0
+/event/verbose 0
+/run/verbose 0
+/particle/verbose 0
+/process/had/verbose 0
+/tracking/verbose 0
+/process/em/verbose 0
+
+/setMaterial/detectionMedium lCF4
+/run/initialize
+
+/gps/particle opticalphoton
+/gps/energy 2 eV
+/gps/pos/type Point
+/gps/number 100
+
+/gps/pos/centre 0.0 0.0 3 cm # photons in
+/gps/direction 0. 0. -1 
+
+/analysis/setFileName photonTest2
+#/analysis/ntuple/setFileName 0 anotherNameIWant3
+
+#/run/initialize
+
+/run/beamOn 100
