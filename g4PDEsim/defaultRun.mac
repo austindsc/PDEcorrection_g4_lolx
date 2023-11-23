@@ -6,22 +6,21 @@
 #/run/numberOfThreads 1 # defaults to zero
 
 /vis/verbose 0
-/tracking/verbose 0
-/event/verbose 0
 /process/had/verbose 0
 /run/verbose 0
 /particle/verbose 0
+/event/verbose 0
 /tracking/verbose 0
 
 /process/em/verbose 0
-/process/optical/verbose 1
+/process/optical/verbose 0
 #/process/optical/scintillation/verbose 1
-
 
 ### Material Properties ###
 #/setMaterial/detectionMedium gCF4        # default is gas
 #/setMaterial/detectionMedium gAr         # currently undefined
-/setMaterial/detectionMedium lCF4         # see Optics/material for default LYs
+/setMaterial/detectionMedium air
+#/setMaterial/detectionMedium lCF4         # see Optics/material for default LYs
 
 # not implemented
 #/setMaterial/mediumDensity 1.69 g/cm3  # use this to set density directly. Takes precendece over density calculated by SetTemp. default densities given in DetectorMaterials.cc
@@ -47,7 +46,8 @@
 /process/optical/processActivation OpWLS false
 
 ### Naming Output ###
-/analysis/setFileName testNaming2                  # use either of these functions. whatever is last overrides
+#/analysis/setFileName testNaming2                  # use either of these functions. whatever is last overrides
+/analysis/setFileName photonTest1
 #/analysis/ntuple/setFileName 0 anotherNameIWant   # this doesn't work anymore bc ntuple is made in BeginRunAction
 
 ### Initialize kernel (build detector) ###

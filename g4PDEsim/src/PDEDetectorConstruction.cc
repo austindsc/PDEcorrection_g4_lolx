@@ -31,13 +31,17 @@
 #include "PDEDetectorConstruction.hh"
 #include "PDEDetectorConstructionMessenger.hh"
 
-#include "sensitiveSipm.hh"
+#include "SensitiveSIPM.hh"
 #include "myGlobals.hh"
 #include "DetectorMaterials.hh"
 #include "MaterialsMessenger.hh"
 #include "HelperFunctions.hh"
 
 #include <cmath>
+
+G4String PDEDetectorConstruction::fStrBulk = "logic_sipmBulk";
+G4String PDEDetectorConstruction::fStrSurface = "logic_sipmSurface";
+G4String PDEDetectorConstruction::fStrWindow = "logic_quartzWindow";
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -58,8 +62,8 @@ PDEDetectorConstruction::PDEDetectorConstruction()
 
 void PDEDetectorConstruction::ConstructSDandField(){
     
-    sensitiveSipm * ssipm = new sensitiveSipm("sensitiveSipm");
-    fsipmVolume->SetSensitiveDetector(ssipm);
+    SensitiveSIPM * ssipm = new SensitiveSIPM("SensitiveSIPM");
+    fsipmDetectionBack->SetSensitiveDetector(ssipm);
     
 }
 
@@ -90,44 +94,47 @@ G4VPhysicalVolume* PDEDetectorConstruction::Construct()
   G4double maxTrackLength = 2*world_sizeXY;
 
   G4Box* solidWorld = new G4Box("World", 0.5*world_sizeXY, 0.5*world_sizeXY, 0.5*world_sizeZ);
-  G4LogicalVolume* logic_world = new G4LogicalVolume(solidWorld, detMat->mAir, "World");   
+  G4LogicalVolume* logic_world = new G4LogicalVolume(solidWorld, detMat->GetDetectorMedium(), "World");   
   G4VPhysicalVolume* physWorld = new G4PVPlacement(0, G4ThreeVector(), logic_world, "World", 0, false, 0, checkOverlaps);
-  
+
+  // G4cout << "Material used in logic_world: " << logic_world->GetMaterial()->GetName() << G4endl;
+
   G4UserLimits * myLimits = new G4UserLimits();
   myLimits->SetUserMaxTrackLength(maxTrackLength);
   logic_world->SetUserLimits(myLimits);
-  fWorld = logic_world;
+  // fWorld = logic_world;
   
   //--------------------------- SiPM ---------------------------//
   G4double sipmXY = 5 * cm; // in reality it is 5.95 x 5.85
+  sipmXY = world_sizeXY;
+
   G4double sipmThick = 1*cm; // guess
   G4double sipmBackThick = 0.5*cm; // guess
   G4double sipmSurfaceThick = 1.*mm;
 
-  G4double quartzWindowGap = 2*mm;
+  G4double quartzWindowGap = 1*mm;
   G4double quartzWindowThick = 2.*mm;
 
   //-- silicon bulk --//
-  G4Box * solid_sipm = new G4Box("solid_sipm", 0.5*sipmXY, 0.5*sipmXY, 0.5*sipmThick);
-  G4LogicalVolume * logic_sipm = new G4LogicalVolume(solid_sipm, detMat->mSilicon, "logic_sipm");
-  logic_sipm->SetVisAttributes(si_magenta);
-  G4ThreeVector moveSipm = G4ThreeVector(0, 0, -solid_sipm->GetZHalfLength());
-  G4VPhysicalVolume* phys_sipm = new G4PVPlacement(0, moveSipm, logic_sipm, "phys_sipm",
+  G4Box * solid_sipmBulk = new G4Box("solid_sipmBulk", 0.5*sipmXY, 0.5*sipmXY, 0.5*sipmThick);
+  G4LogicalVolume * logic_sipmBulk = new G4LogicalVolume(solid_sipmBulk, detMat->mSilicon, "logic_sipmBulk");
+  logic_sipmBulk->SetVisAttributes(si_magenta);
+  G4ThreeVector moveSipm = G4ThreeVector(0, 0, -solid_sipmBulk->GetZHalfLength());
+  G4VPhysicalVolume* phys_sipmBulk = new G4PVPlacement(0, moveSipm, logic_sipmBulk, "phys_sipmBulk",
                     logic_world,         // mother volume
                     false, 0, checkOverlaps);
 
-  //-- silicon backing/avalanche region --//
+  //-- silicon backing/avalanche region/detection region --//
   G4Box * solid_sipmBack = new G4Box("solid_sipmBack", 0.5*sipmXY, 0.5*sipmXY, 0.5*sipmBackThick);
   G4LogicalVolume * logic_sipmBack = new G4LogicalVolume(solid_sipmBack, detMat->mSilicon, "logic_sipmBack");
   logic_sipmBack->SetVisAttributes(filter_green);
 
-  G4ThreeVector moveSipmBack = G4ThreeVector(0, 0, -2*solid_sipm->GetZHalfLength()-solid_sipmBack->GetZHalfLength());
+  G4ThreeVector moveSipmBack = G4ThreeVector(0, 0, -2*solid_sipmBulk->GetZHalfLength()-solid_sipmBack->GetZHalfLength());
   // sipm wrt origin of solid_BoxPackage is y, z to rotate
 
   G4VPhysicalVolume* phys_sipmBack = new G4PVPlacement(0, moveSipmBack, logic_sipmBack, "phys_sipmBack",
                     logic_world,         // mother volume
                     false, 0, checkOverlaps);
-  fsipmVolume = logic_sipmBack; // very important!
 
   //-- silicon surface (Quartz) --//
   G4Box * solid_sipmSurface = new G4Box("solid_sipmSurface", 0.5*sipmXY, 0.5*sipmXY, 0.5*sipmSurfaceThick);
@@ -152,9 +159,23 @@ G4VPhysicalVolume* PDEDetectorConstruction::Construct()
                     logic_world,         // mother volume
                     false, 0, checkOverlaps);
 
+
+  // setting items for usage later
+  fsipmDetectionBack = logic_sipmBack; // very important!
+  fBulkZ = phys_sipmBulk->GetTranslation().z();
+  fSurfaceZ = phys_sipmSurface->GetTranslation().z();
+  fWindowZ = phys_quartzWindow->GetTranslation().z();
+
+  fLogBulk = logic_sipmBulk;
+  fLogSurface = logic_sipmSurface;
+  fLogWindow = logic_quartzWindow;
+  fLogBacking = logic_sipmBack;
+  fWorld = logic_world;
+
+  // G4cout << fBulkZ/mm << " mm" << G4endl;
+  // exit(0);
+
   G4cout << "\n---------------------- Done Construct() ----------------------" << G4endl;
-
-
   //always return the physical World
   return physWorld;
 }

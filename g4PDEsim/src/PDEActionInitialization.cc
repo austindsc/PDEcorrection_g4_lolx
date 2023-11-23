@@ -7,11 +7,17 @@
 #include "PDEEventAction.hh"
 #include "PDESteppingAction.hh"
 
+#include "PDEDetectorConstruction.hh"
+#include "PDETrackingAction.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-PDEActionInitialization::PDEActionInitialization()
- : G4VUserActionInitialization()
-{}
+PDEActionInitialization::PDEActionInitialization(PDEDetectorConstruction * detCons)
+ : G4VUserActionInitialization(){
+
+  fDetCons = detCons;
+
+ }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -44,8 +50,12 @@ void PDEActionInitialization::Build() const
   
   PDEEventAction* eventAction = new PDEEventAction(runAction);
   SetUserAction(eventAction);
+
+  PDETrackingAction * trackAction = new PDETrackingAction(fDetCons, eventAction);
+  SetUserAction(trackAction);
   
-  SetUserAction(new PDESteppingAction(eventAction));
+  PDESteppingAction* stepping = new PDESteppingAction(eventAction, trackAction, fDetCons);
+  SetUserAction(stepping);
 }  
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

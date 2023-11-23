@@ -51,10 +51,12 @@ DetectorMaterials::~DetectorMaterials(){}
 void DetectorMaterials::SetDetectionMedium(G4String med){
   if(med == "gCF4" || med == "GCF4"){
     fDetectorMedium = &mGasCF4;
-  } else if (med == "lCF4" || med == "LCF4"){
+  } else if (med == "lCF4" || med == "LCF4" || med == "lcf4"){
     fDetectorMedium = &mLiquidCF4;
   } else if (med == "gAr" || med == "GAr"){
     fDetectorMedium = &mGasAr;
+  } else if (med == "air" || med == "Air" || med == "AIR"){
+    fDetectorMedium = &mAir;
   }
 }
 

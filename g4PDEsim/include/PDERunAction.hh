@@ -34,7 +34,7 @@ class PDERunAction : public G4UserRunAction
 
     PDEPrimaryGeneratorAction * fGenerator;
     
-    G4int    ftotalMCPE;
+    G4int    ftotalHitPE;
     G4int    ftotalFired;
 };
 

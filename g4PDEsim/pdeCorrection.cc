@@ -38,7 +38,8 @@ int main(int argc,char** argv)
   runManager->SetVerboseLevel(0);
 
   // Detector construction
-  runManager->SetUserInitialization(new PDEDetectorConstruction());
+  PDEDetectorConstruction * detCons = new PDEDetectorConstruction();
+  runManager->SetUserInitialization(detCons);
 
   // Physics list - from Optical/LXe example
   G4VModularPhysicsList* physicsList = new FTFP_BERT;
@@ -50,7 +51,7 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(physicsList);
 
   // User action initialization
-  runManager->SetUserInitialization(new PDEActionInitialization());
+  runManager->SetUserInitialization(new PDEActionInitialization(detCons));
   runManager->SetVerboseLevel(0);
   
   // Initialize visualization

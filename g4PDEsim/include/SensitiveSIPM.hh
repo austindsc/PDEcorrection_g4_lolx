@@ -1,5 +1,5 @@
-#ifndef SENSITIVESIPM_H
-#define SENSITIVESIPM_H
+#ifndef SensitiveSIPM_H
+#define SensitiveSIPM_H
 
 #include "G4VSensitiveDetector.hh"
 #include "G4PhysicsOrderedFreeVector.hh"
@@ -7,11 +7,11 @@
 class G4UniformRand;
 class PDEEventAction;
 
-class sensitiveSipm : public G4VSensitiveDetector
+class SensitiveSIPM : public G4VSensitiveDetector
 {
 public:
-  sensitiveSipm(G4String);
-  ~sensitiveSipm();  
+  SensitiveSIPM(G4String);
+  ~SensitiveSIPM();  
   
 private:
   PDEEventAction * fEventAction;

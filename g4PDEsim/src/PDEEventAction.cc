@@ -24,8 +24,7 @@
 
 PDEEventAction::PDEEventAction(PDERunAction* runAction)
 : G4UserEventAction(),
-  fRunAction(runAction),
-  fmcNPE(0)
+  fRunAction(runAction)
 {
   evMan = G4EventManager::GetEventManager();
 } 
@@ -43,43 +42,68 @@ void PDEEventAction::BeginOfEventAction(const G4Event*)
   if((MG::GetVerbosity() == 1 || evMan->GetVerboseLevel() > 0) && (evt < 100 || evt % 1000 == 0)){
     G4cout << "\n-------- Start Event --------" << G4endl;
   }
+  G4double hc = CLHEP::h_Planck * CLHEP::c_light;
+  G4GeneralParticleSource * tGun = fRunAction->fGenerator->fGun;
 
-  fPhotonWavelength = 420*nm; // not used now
-  fNphotonFired = 1;
-  fmcNPE = 0;
-  fNPE = 0;
+  fNphotonFired = tGun->GetNumberOfParticles();
+  fPhotonWavelength = hc/(tGun->GetCurrentSource()->GetParticleEnergy())/nm;
+  fAngle = 180 - tGun->GetCurrentSource()->GetParticleMomentumDirection().theta()/deg;
+  // no sure why I need -180 here. I guess Z is defined down for GPS but differently here
+
+  fNonWindow = 0;
+  fNonSurface = 0;
+  fNonBulk = 0;
+  fNinBulk = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void PDEEventAction::PrintOutput(int verb){
+  if(MG::GetVerbosity() > 0 || verb > 0){
+    G4cout << "wlen = " << fPhotonWavelength << " nm" << G4endl;
+    G4cout << "fAngle = " << fAngle << " deg\n" << G4endl;
+    G4cout << "Nphoton = " << fNphotonFired << "\n";
+    G4cout << "Nwindow = " << fNonWindow << "\n";
+    G4cout << "Nsurface = " << fNonSurface << "\n";
+    G4cout << "NBulk = " << fNonBulk << "\n";
+    G4cout << "Ninside = " << fNinBulk << "\n";
+    G4cout << "fraction in = " << (float) fNinBulk/fNphotonFired << G4endl;
+  }
+}
 
 void PDEEventAction::EndOfEventAction(const G4Event*)
 {   
-  // skip filling ntuple if zero energy deposited
 
-  // tracking some stuff for photon testing
-  fRunAction->ftotalMCPE += fmcNPE;
-  fRunAction->ftotalFired += fRunAction->fGenerator->fGun->GetNumberOfParticles();
-  
+  // tracking some stuff for photon testing for many events
+  fRunAction->ftotalHitPE += fNinBulk;
+  fRunAction->ftotalFired += fNphotonFired;
+
+  this->PrintOutput();
+
   G4int evt = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
     if(fNphotonFired > 0 || MG::GetVerbosity() == -1 || MG::GetVerbosity() > 1){ // this is where we skip filling the ntuple
     G4AnalysisManager *man = G4AnalysisManager::Instance();
-    // man->FillNtupleIColumn(0, evt);
-    // // man->FillNtupleDColumn(1, fNphotonFired/keV);
-    // man->FillNtupleIColumn(2, fmcNPE);
-    // man->FillNtupleIColumn(3, fNPE);
-    // man->AddNtupleRow(0);
+    man->FillNtupleIColumn(0, fNphotonFired);
+    man->FillNtupleDColumn(1, fPhotonWavelength);
+    man->FillNtupleDColumn(2, fAngle);
+
+    man->FillNtupleIColumn(3, fNonWindow);
+    man->FillNtupleIColumn(4, fNonSurface);
+    man->FillNtupleIColumn(5, fNonBulk);
+    man->FillNtupleIColumn(6, fNinBulk);
+    man->AddNtupleRow(0);
   }
   
-  if((MG::GetVerbosity() >= 1 || evMan->GetVerboseLevel() > 0) && (evt < 100 || evt % 1000 == 0)){
-    G4cout << "\n---- My Event Info #" << evt << "  ----\n\n" 
-    << "total MC PE = " << fmcNPE << "\n"
-    << "total PE = " << fNPE << G4endl;
-    // G4cout << "PDEeventAction::EOEA fEdep = " << fEdep/keV << " keV" << G4endl;
-    G4cout << "\n---- Event Complete ----\n" << G4endl;
-  }
+  // if((MG::GetVerbosity() >= 1 || evMan->GetVerboseLevel() > 0) && (evt < 100 || evt % 1000 == 0)){
+  //   G4cout << "\n---- My Event Info #" << evt << "  ----\n\n";
+
+  //   // << "total MC PE = " << fmcNPE << "\n"
+  //   // << "total PE = " << fNPE << G4endl;
+
+  //   // G4cout << "PDEeventAction::EOEA fEdep = " << fEdep/keV << " keV" << G4endl;
+  //   G4cout << "\n---- Event Complete ----\n" << G4endl;
+  // }
 }
 
- void PDEEventAction::AddmcPE(){fmcNPE++;}
- void PDEEventAction::AddPE(){fNPE++;}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//  void PDEEventAction::AddmcPE(){fmcNPE++;}
+//  void PDEEventAction::AddPE(){fNPE++;}

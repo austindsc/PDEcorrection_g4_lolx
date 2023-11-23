@@ -4,17 +4,28 @@
 /gps/particle opticalphoton
 /gps/energy 5 eV
 /gps/pos/type Point
-/gps/number 1
+/gps/number 10
 
 #/gps/pos/centre 0. 0. -0.5 cm # photons out
 #/gps/direction 0. 1 1 
 
-/gps/pos/centre 0. 0. 1 cm # photons in
-/gps/direction 0. 1. -1 
+/gps/pos/centre 0. -5. 0.5 cm # photons in
+#/gps/direction 0. 1. -1 
 
-/analysis/setFileName photonTest2
+#/gps/ang/mintheta 90 deg
+#/gps/ang/maxtheta 90 deg
+
+/gps/ene/mono 8.40 eV
+/gps/ang/mintheta 15.0 deg 
+/gps/ang/maxtheta 15.0 deg
+
+/gps/ang/minphi -90.0 deg 
+/gps/ang/maxphi -90.0 deg
+/run/beamOn 1
+
+#/analysis/setFileName photonTest1
 #/analysis/ntuple/setFileName 0 anotherNameIWant3
 
 #/run/initialize
 
-/run/beamOn 1
+#/run/beamOn 1

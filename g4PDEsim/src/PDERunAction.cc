@@ -2,6 +2,7 @@
 /// \brief Implementation of the PDERunAction class
 
 #include "PDERunAction.hh"
+#include "PDEEventAction.hh"
 #include "PDEPrimaryGeneratorAction.hh"
 #include "PDEDetectorConstruction.hh"
 
@@ -28,14 +29,22 @@
 PDERunAction::PDERunAction(PDEPrimaryGeneratorAction * genny)
 : G4UserRunAction(){ 
   fGenerator = genny; // for photon testing if multiple photons are shot
-  ftotalMCPE = 0;
-  ftotalFired = 0;
   
   G4AnalysisManager * man = G4AnalysisManager::Instance();
   man->SetDefaultFileType("root");
   man->SetFileName("pde_outputStock");
   man->CreateNtuple("simOutput", "simOutput");
   // but if you don't do this, you can't name the file from the macro
+
+  man->CreateNtupleIColumn("fNphoton");       //0 - how many photons shot
+  man->CreateNtupleDColumn("fPhotonWln");     //1 - duh
+  man->CreateNtupleDColumn("fAngle");         //2 - angle from gun
+
+  man->CreateNtupleIColumn("fNonWindow");     //3 - hitting surface layer(no PDE)
+  man->CreateNtupleIColumn("fNonSurface");    //4 - hitting surface layer(no PDE)
+  man->CreateNtupleIColumn("fNonBulk");       //5 - inside surface layer
+  man->CreateNtupleIColumn("fNinBulk");       //6 - passing into bulk (what we want)
+  man->FinishNtuple();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -47,7 +56,9 @@ PDERunAction::~PDERunAction()
 
 void PDERunAction::BeginOfRunAction(const G4Run*)
 { 
-  ftotalMCPE = 0;
+
+  if(MG::GetVerbosity() > 0) G4cout << "called BeginOfRunAction" << G4endl;
+  ftotalHitPE = 0;
   ftotalFired = 0;
   // inform the runManager to save random number seed
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
@@ -60,14 +71,6 @@ void PDERunAction::BeginOfRunAction(const G4Run*)
   accumulableManager->Reset();
   
   G4AnalysisManager *man = G4AnalysisManager::Instance();
-  
-  man->CreateNtupleIColumn("fNphoton");       //0 - how many photons shot
-  man->CreateNtupleDColumn("fPhotonWln");     //1 - duh
-  man->CreateNtupleDColumn("fAngle");         //2 - angle from gun
-  man->CreateNtupleIColumn("fOnSurface");     //3 - hitting surface - MC truth value on bulk(no PDE)
-  man->CreateNtupleIColumn("fInSurface");     //4 - in surface
-  man->CreateNtupleIColumn("fInBulk");        //3 - passing into bulk (what we want)
-  man->FinishNtuple(0);
 
   man->OpenFile();
 }
@@ -76,48 +79,37 @@ void PDERunAction::BeginOfRunAction(const G4Run*)
 
 void PDERunAction::EndOfRunAction(const G4Run* run)
 {
-  G4int nofEvents = run->GetNumberOfEvent();
-  if (nofEvents == 0) return;
-        
-  // Print
-  if (IsMaster()) {
-    G4cout
-     << G4endl
-     << "--------------------End of Global Run-----------------------";
-  }
-  else {
-    G4cout
-     << G4endl
-     << "--------------------End of Local Run------------------------";
-  }
-  
-  G4cout << "\nFinished run of " << nofEvents << " events" << G4endl;
+  G4int nofPhotons = run->GetNumberOfEvent() * fGenerator->fGun->GetNumberOfParticles(); // same as ftotalFired
+  if (nofPhotons == 0) return;
+
+  PDEEventAction* eventAction = (PDEEventAction *) G4RunManager::GetRunManager()->GetUserEventAction();
 
   // getting the ntuple
   G4AnalysisManager * man = G4AnalysisManager::Instance();
 
-  if(MG::GetVerbosity() > 0) {
-    
-    G4cout << ftotalFired << " particles fired, " << ftotalMCPE << " photons hit" << G4endl;
-    G4cout << (double) ftotalMCPE/ftotalFired << G4endl;
-
+  if(MG::GetVerbosity() > 0 || true) {
+    // G4cout << nofPhotons << " photons fired, " << nofPhotons << " photons hit" << G4endl;
+    G4cout << "acc check. should equal fraction in: " << (double) eventAction->fNinBulk/ftotalFired << G4endl;
   }
-    
-
   
+  // Print
+  if (IsMaster()) {
+    G4cout << "\nFinished run of " << nofPhotons << " photons. Sanity check" << bool(nofPhotons == ftotalFired) << G4endl;
+    
+    eventAction->PrintOutput(1);
+
+    G4cout << "\n--------------------End of Global Run-----------------------" << G4endl;
+    }
+  else { 
+    G4cout << "\nFinished run of " << nofPhotons << " photons. Sanity check" << bool(nofPhotons == ftotalFired) << G4endl;
+    
+    eventAction->PrintOutput(1);
+
+    G4cout << "\n--------------------End of Local Run------------------------" << G4endl;
+    }
+  
+    
    man->Write();
    man->CloseFile();
 
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-// void PDERunAction::AddEdep(G4double edep)
-// {
-//   fEdep  += edep;
-//   fEdep2 += edep*edep;
-// }
-
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
