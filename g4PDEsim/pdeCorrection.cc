@@ -5,6 +5,7 @@
 #include "PDEActionInitialization.hh"
 
 #include "G4RunManagerFactory.hh"
+#include "G4AnalysisManager.hh"
 
 #include "G4UImanager.hh"
 
@@ -32,6 +33,9 @@ int main(int argc,char** argv)
   // Detect interactive mode (if no arguments) and define UI session
   G4UIExecutive* ui = 0;
   if ( argc == 1 ) { ui = new G4UIExecutive(argc, argv);  }
+
+  // getting the ntuple
+  G4AnalysisManager * man = G4AnalysisManager::Instance();
   
   // Construct the default run manager
   G4RunManager * runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
@@ -80,6 +84,9 @@ int main(int argc,char** argv)
     ui->SessionStart();
     delete ui;
   }
+
+ man->Write();
+ man->CloseFile();
 
   delete visManager;
   delete runManager;

@@ -8,26 +8,28 @@ import scipy as sp
 Nphoton = 10000
 zHeight = 0.5 # cm # if too far some photons will miss. should check manually at your max angle
 myVerbosity = 0
-pickMedium = "lcf4"
+pickMedium = "air"
 mediumOptions = ["air", "lcf4"] # need to compare to G4 code if you add stuff
 
 ## same input, output for one wavelength
-wlStart = 100
-wlEnd = 200
+wlStart = 200
+wlEnd = 1200
 wlStep = 10
 
 ## same as above for fixed angle
-angleLow = 5
-angleHigh = 5
-angleStep = 5
+angleLow = 0
+angleHigh = 60
+angleStep = 15
 
 fixedPhi = -90 # leave this
 tRad = np.pi/180 # don't change this lol
 
-
-
 if pickMedium not in mediumOptions:
   exit("ERROR: pickMedium not in mediumOptions")
+
+nstring = f"{Nphoton:e}"; 
+nstring = nstring.replace("0", "").replace(".", "").replace("+", "")
+outputName = f"{pickMedium}_N{nstring}_{wlStart}-{wlEnd}nm_{angleLow}-{angleHigh}deg.mac"
 
 strVerbosities = """
 /vis/verbose 0
@@ -55,7 +57,7 @@ strProcesses = """
 if len(sys.argv) > 1:
   newMacName = sys.argv[1]
 else:
-  newMacName = "testBlah.mac"
+  newMacName = outputName
   
 summaryString = f"# medium = {pickMedium}\n"
 summaryString += "# Nphoton = {}, wlStart = {}, wlEnd = {}, wlStep = {}, \n#angleLow = {}, angleHigh = {}, angleStep = {}\n".format(Nphoton, wlStart, wlEnd, wlStep, angleLow, angleHigh, angleStep)

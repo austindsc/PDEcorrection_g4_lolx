@@ -1,0 +1,26 @@
+
+
+
+fin = Nbulk/Ntotal
+
+0.2/0.1 > 1
+
+f_liquid_Si/f_air_si
+
+PDE* = PDE / f_air_si
+
+PDE* = PDE / f_air_si * f_liquid_Si
+
+
+simulation_vanilla = PDE x T_liquid = PDE* x T_air x T_liquid
+
+simulation = T_liquid x PDE* = T_liquid x PDE / f_air_si
+
+# ^ make sure this is not > 1
+
+
+T_liquid(lambda) / f_air_si(lambda) must keep corrected PDE < 1 ??
+
+
+scaling should be 'agnostic' to the PDE shape 
+- don't unfold effects

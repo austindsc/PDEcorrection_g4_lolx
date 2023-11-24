@@ -45,6 +45,8 @@ void PDEEventAction::BeginOfEventAction(const G4Event*)
   G4double hc = CLHEP::h_Planck * CLHEP::c_light;
   G4GeneralParticleSource * tGun = fRunAction->fGenerator->fGun;
 
+  // G4cout <<"xx resetting variables in BOEA" << G4endl;
+
   fNphotonFired = tGun->GetNumberOfParticles();
   fPhotonWavelength = hc/(tGun->GetCurrentSource()->GetParticleEnergy())/nm;
   fAngle = 180 - tGun->GetCurrentSource()->GetParticleMomentumDirection().theta()/deg;
@@ -78,8 +80,10 @@ void PDEEventAction::EndOfEventAction(const G4Event*)
   fRunAction->ftotalHitPE += fNinBulk;
   fRunAction->ftotalFired += fNphotonFired;
 
+  // G4cout <<"xx printing variables in BOEA" << G4endl;
   this->PrintOutput();
 
+  // for(int i = 0; i < 10; i++){
   G4int evt = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
     if(fNphotonFired > 0 || MG::GetVerbosity() == -1 || MG::GetVerbosity() > 1){ // this is where we skip filling the ntuple
     G4AnalysisManager *man = G4AnalysisManager::Instance();

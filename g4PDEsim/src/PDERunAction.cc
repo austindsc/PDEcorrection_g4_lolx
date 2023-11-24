@@ -45,6 +45,8 @@ PDERunAction::PDERunAction(PDEPrimaryGeneratorAction * genny)
   man->CreateNtupleIColumn("fNonBulk");       //5 - inside surface layer
   man->CreateNtupleIColumn("fNinBulk");       //6 - passing into bulk (what we want)
   man->FinishNtuple();
+
+  // man->OpenFile();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -56,6 +58,12 @@ PDERunAction::~PDERunAction()
 
 void PDERunAction::BeginOfRunAction(const G4Run*)
 { 
+
+  // because we do a lot of runs and write to one file, we need to check here (and only open file once)
+  G4AnalysisManager *man = G4AnalysisManager::Instance();
+  if (!man->IsOpenFile()){
+    man->OpenFile();
+  }
 
   if(MG::GetVerbosity() > 0) G4cout << "called BeginOfRunAction" << G4endl;
   ftotalHitPE = 0;
@@ -69,10 +77,8 @@ void PDERunAction::BeginOfRunAction(const G4Run*)
   // reset accumulables to their initial values
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Reset();
-  
-  G4AnalysisManager *man = G4AnalysisManager::Instance();
 
-  man->OpenFile();
+  // man->OpenFile();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -83,9 +89,6 @@ void PDERunAction::EndOfRunAction(const G4Run* run)
   if (nofPhotons == 0) return;
 
   PDEEventAction* eventAction = (PDEEventAction *) G4RunManager::GetRunManager()->GetUserEventAction();
-
-  // getting the ntuple
-  G4AnalysisManager * man = G4AnalysisManager::Instance();
 
   if(MG::GetVerbosity() > 0 || true) {
     // G4cout << nofPhotons << " photons fired, " << nofPhotons << " photons hit" << G4endl;
@@ -109,7 +112,9 @@ void PDERunAction::EndOfRunAction(const G4Run* run)
     }
   
     
-   man->Write();
-   man->CloseFile();
+  //     // getting the ntuple
+  // G4AnalysisManager * man = G4AnalysisManager::Instance();
+  // //  man->Write();
+  // //  man->CloseFile();
 
 }

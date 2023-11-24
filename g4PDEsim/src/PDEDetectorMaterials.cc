@@ -157,7 +157,7 @@ void DetectorMaterials::BuildMaterials(){
   // -- Silicon -- //
   mSilicon = nist->FindOrBuildMaterial("G4_Si");
   std::vector<G4double> photonE_Si, nSi;
-  OH::ReadAndFillArray("dataOptics/siliconRINDEX_100nm_Pierce.txt", photonE_Si, nSi, MG::GetVerbosity(), 1., 1., true); // no scaling, flip wavelengths to eV
+  OH::ReadAndFillArray("dataOptics/siliconRINDEX_100nm_Pierce.txt", photonE_Si, nSi, MG::GetVerbosity(), 1000., 1., true); // no scaling, flip wavelengths to eV
   std::reverse(photonE_Si.begin(), photonE_Si.end());
   std::reverse(nSi.begin(), nSi.end());
 

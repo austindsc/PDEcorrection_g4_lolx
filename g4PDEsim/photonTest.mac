@@ -4,7 +4,7 @@
 /gps/particle opticalphoton
 /gps/energy 5 eV
 /gps/pos/type Point
-/gps/number 10
+/gps/number 10000
 
 #/gps/pos/centre 0. 0. -0.5 cm # photons out
 #/gps/direction 0. 1 1 
@@ -15,9 +15,9 @@
 #/gps/ang/mintheta 90 deg
 #/gps/ang/maxtheta 90 deg
 
-/gps/ene/mono 8.40 eV
-/gps/ang/mintheta 15.0 deg 
-/gps/ang/maxtheta 15.0 deg
+/gps/ene/mono 1.3 eV
+/gps/ang/mintheta 10.0 deg 
+/gps/ang/maxtheta 10.0 deg
 
 /gps/ang/minphi -90.0 deg 
 /gps/ang/maxphi -90.0 deg
