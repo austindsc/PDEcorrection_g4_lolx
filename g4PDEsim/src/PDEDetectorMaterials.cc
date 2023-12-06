@@ -149,7 +149,11 @@ void DetectorMaterials::BuildMaterials(){
 
   // use built in RINDEX
   mptQuartz->AddProperty("RINDEX", "Fused Silica");
+  // mptQuartz->AddProperty("RINDEX", "Fused Silica");
   mQuartz->SetMaterialPropertiesTable(mptQuartz);
+
+  mptQuartz->DumpTable();
+  exit(0);
 
   // mHeavyQuartz = nist->FindOrBuildMaterials("G4_MAGNESIUM_FLUORIDE");
   // mHeavyQuartz = nist->FindOrBuildMaterial("G4_BORON_OXIDE");

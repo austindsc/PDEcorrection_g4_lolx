@@ -1,4 +1,4 @@
-# first line is ignored. Wavelength (nm), intensity
+# first line is ignored. Wavelength (nm), intensity, Morozov paper, ph/MeV nm
 500.1579138	0.0.
 506.5931671	0.008494319931
 511.9567149	0.009263136553

@@ -1,4 +1,4 @@
-nm	k
+nm	k - bulk fused silica - from RIT Center for Nanolithography Research webpage - 
 110	0.773
 115	0.6327
 120	1.0059

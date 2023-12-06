@@ -1,4 +1,4 @@
-# first line is ignored. Wavelength (nm), intensity
+# first line is ignored. Wavelength (nm), intensity, Morozov paper, arb intensity
 503.3821146 0.0
 509.8164117 0.004688964524
 516.2533384 0.005053291804
