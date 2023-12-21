@@ -1,0 +1,1637 @@
+# medium = air
+# Nphoton = 10000, wlStart = 150, wlEnd = 1200, wlStep = 25, 
+#angleLow = 0, angleHigh = 60, angleStep = 10
+
+# --- --- --- --- --- # 
+
+/vis/verbose 0
+/tracking/verbose 0
+/event/verbose 0
+/process/had/verbose 0
+/run/verbose 0
+/particle/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+/process/optical/verbose 0
+#/process/optical/scintillation/verbose 1
+
+/process/optical/processActivation OpRayleigh false
+/process/optical/processActivation OpAbsorption false
+/process/optical/processActivation OpBoundary true
+/process/optical/processActivation OpMieHG false
+/process/optical/processActivation OpWLS false
+
+
+# --- --- --- --- --- # 
+
+/setDetector/myVerbosity 0
+/setMaterial/detectionMedium air
+# --- --- --- --- --- # 
+
+/analysis/setFileName air_N1e4_150-1200nm_0-60deg 
+/run/initialize 
+
+# --- --- --- --- --- # 
+
+/gps/pos/type Point
+/gps/particle opticalphoton
+
+/gps/position 0 -5. 0.5 cm
+/gps/number 10000
+/gps/ang/minphi -90 deg
+/gps/ang/maxphi -90 deg
+# --- --- --- --- --- # 
+
+/gps/ene/mono 8.27 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 7.09 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 6.20 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 5.51 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 4.96 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 4.51 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 4.13 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 3.82 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 3.54 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 3.31 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 3.10 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 2.92 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 2.76 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 2.61 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 2.48 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 2.36 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 2.25 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 2.16 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 2.07 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.98 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.91 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.84 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.77 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.71 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.65 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.60 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.55 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.50 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.46 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.42 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.38 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.34 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.31 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.27 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.24 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.21 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.18 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.15 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.13 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.10 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.08 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.06 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ene/mono 1.03 eV
+/gps/ang/mintheta 0.0 deg 
+/gps/ang/maxtheta 0.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 25.8 deg 
+/gps/ang/maxtheta 25.8 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 36.9 deg 
+/gps/ang/maxtheta 36.9 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 45.6 deg 
+/gps/ang/maxtheta 45.6 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 53.1 deg 
+/gps/ang/maxtheta 53.1 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+/gps/ang/mintheta 60.0 deg 
+/gps/ang/maxtheta 60.0 deg 
+/run/beamOn 1
+
+# --- --- --- # 
+
+# END
