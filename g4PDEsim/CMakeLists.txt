@@ -18,6 +18,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # set(CMAKE_CXX_FLAGS "-std=c++17 -lstdc++fs") 
 
+# compiler argument for how do you want to do the optics
+option(USE_METAL_COMPLEX "Use both indexes instead of RINDEX, define as metals" ON)
+if(USE_METAL_COMPLEX)
+  add_definitions(-DUSE_METAL_COMPLEX=1)
+else()
+  add_definitions(-DUSE_METAL_COMPLEX=0)
+endif()
+
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
 # You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
@@ -86,9 +94,12 @@ target_link_libraries(pde ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 
 file(GLOB DATA_FOLDER "data")
 file(COPY ${DATA_FOLDER} DESTINATION ${PROJECT_BINARY_DIR})
+message(STATUS "Copied ${DATA_FOLDER} to build directory")
+
 
 file(GLOB DATA_FOLDER "dataOptics")
 file(COPY ${DATA_FOLDER} DESTINATION ${PROJECT_BINARY_DIR})
+message(STATUS "Copied ${DATA_FOLDER} to build directory")
 #message(STATUS "project binary dir =" ${PROJECT_BINARY_DIR})
 
 #----------------------------------------------------------------------------

@@ -62,6 +62,7 @@ void PDEEventAction::BeginOfEventAction(const G4Event*)
 
 void PDEEventAction::PrintOutput(int verb){
   if(MG::GetVerbosity() > 0 || verb > 0){
+
     G4cout << "wlen = " << fPhotonWavelength << " nm" << G4endl;
     G4cout << "fAngle = " << fAngle << " deg\n" << G4endl;
     G4cout << "Nphoton = " << fNphotonFired << "\n";

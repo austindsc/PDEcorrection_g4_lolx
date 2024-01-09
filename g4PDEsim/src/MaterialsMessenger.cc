@@ -8,10 +8,9 @@
 #include "G4SystemOfUnits.hh"
 
 #include "MaterialsMessenger.hh"
-#include "DetectorMaterials.hh"
+#include "PDEDetectorMaterials.hh"
 
-MaterialsMessenger::MaterialsMessenger(DetectorMaterials * dmat)
-:fdmat(dmat)
+MaterialsMessenger::MaterialsMessenger(PDEDetectorMaterials * dmat):fdmat(dmat)
 {
   
   calledDensity = false;
@@ -21,7 +20,7 @@ MaterialsMessenger::MaterialsMessenger(DetectorMaterials * dmat)
   Dir->SetGuidance("Set detector medium, density and LY");
   
   SetDetectionMediumCmd = new G4UIcmdWithAString("/setMaterial/detectionMedium", this);
-  SetDetectionMediumCmd->SetGuidance("Select detection medium. 'gCF4', 'lCF4', 'gAr', 'air'");
+  SetDetectionMediumCmd->SetGuidance("Select detection medium. 'gCF4', 'lCF4', 'gAr', 'air', 'lXe'");
   SetDetectionMediumCmd->SetParameterName("medium", false, true);
   SetDetectionMediumCmd->SetDefaultValue("gCF4");
   SetDetectionMediumCmd->AvailableForStates(G4State_PreInit);

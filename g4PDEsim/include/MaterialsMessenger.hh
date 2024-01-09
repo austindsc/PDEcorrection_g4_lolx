@@ -5,7 +5,7 @@
 #include "G4UImessenger.hh"
 #include "G4String.hh"
 
-class DetectorMaterials;
+class PDEDetectorMaterials;
 class G4UIdirectory;
 class G4UIcmdWithADouble;
 class G4UIcmdWithADoubleAndUnit;
@@ -13,15 +13,15 @@ class G4UIcmdWithAString;
 
 class MaterialsMessenger : public G4UImessenger{
 public:
-  MaterialsMessenger(DetectorMaterials *);
+  MaterialsMessenger(PDEDetectorMaterials *);
   ~MaterialsMessenger();
   
   void SetNewValue(G4UIcommand *, G4String );
   
 private:
   
-  DetectorMaterials        * fdmat;
-  G4UIdirectory            * Dir;
+  PDEDetectorMaterials      * fdmat;
+  G4UIdirectory             * Dir;
   
   G4UIcmdWithAString        * SetDetectionMediumCmd;
   G4UIcmdWithADoubleAndUnit * SetMediumDensityCmd;

@@ -12,7 +12,7 @@
 
 class G4VPhysicalVolume;
 class PDEDetectorConstructionMessenger;
-class DetectorMaterials;
+class PDEDetectorMaterials;
 
 /// Detector construction class to define materials and geometry.
 class PDEDetectorConstruction : public G4VUserDetectorConstruction
@@ -53,7 +53,7 @@ class PDEDetectorConstruction : public G4VUserDetectorConstruction
   // private:
     virtual void ConstructSDandField();
     
-    DetectorMaterials * detMat;
+    PDEDetectorMaterials * detMat;
     PDEDetectorConstructionMessenger* fDetMessenger;
 
     G4LogicalVolume* fsipmDetectionBack;

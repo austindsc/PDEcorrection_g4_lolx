@@ -1,4 +1,4 @@
-#include "DetectorMaterials.hh"
+#include "PDEDetectorMaterials.hh"
 
 #include "G4NistManager.hh"
 #include "G4SystemOfUnits.hh"
@@ -23,13 +23,14 @@
 #include "HelperFunctions.hh"
 #include "myGlobals.hh"
 
-#include "DetectorMaterials.hh"
+#include "PDEDetectorMaterials.hh"
 
 // confused about this. but it is necessary.
 // this is where we instantiate the globally used singleton pointer.
-DetectorMaterials * DetectorMaterials::singleton=nullptr;
+// future austin understands - it must be defined globally/permanently
+PDEDetectorMaterials * PDEDetectorMaterials::singleton=nullptr;
 
-DetectorMaterials::DetectorMaterials(){
+PDEDetectorMaterials::PDEDetectorMaterials(){
   
   // default values here
   fDetectorMedium = &mLiquidCF4;     //        default is liquid 
@@ -39,16 +40,16 @@ DetectorMaterials::DetectorMaterials(){
 
 }
 
-DetectorMaterials *DetectorMaterials::GetInstance(){
-  if(singleton==nullptr){ singleton = new DetectorMaterials(); }
+PDEDetectorMaterials *PDEDetectorMaterials::GetInstance(){
+  if(singleton==nullptr){ singleton = new PDEDetectorMaterials(); }
   return singleton;
 }
 
-DetectorMaterials::~DetectorMaterials(){}
+PDEDetectorMaterials::~PDEDetectorMaterials(){}
 
 //////////// Done with namespace ////////////
 
-void DetectorMaterials::SetDetectionMedium(G4String med){
+void PDEDetectorMaterials::SetDetectionMedium(G4String med){
   if(med == "gCF4" || med == "GCF4"){
     fDetectorMedium = &mGasCF4;
   } else if (med == "lCF4" || med == "LCF4" || med == "lcf4"){
@@ -57,10 +58,16 @@ void DetectorMaterials::SetDetectionMedium(G4String med){
     fDetectorMedium = &mGasAr;
   } else if (med == "air" || med == "Air" || med == "AIR"){
     fDetectorMedium = &mAir;
+  } else if (med == "lxe" || med == "LXe" || med == "lXe"){
+    fDetectorMedium = &mLXe;
   }
 }
 
-void DetectorMaterials::BuildMaterials(){
+void PDEDetectorMaterials::BuildMaterials(){
+  int verb;
+  bool flipWL;
+  G4double scale1, scale2;
+
   G4cout << "\n-------- Build Materials() -----------\n" << G4endl;
   
   G4double hc = CLHEP::h_Planck * CLHEP::c_light;
@@ -70,17 +77,58 @@ void DetectorMaterials::BuildMaterials(){
   // -- Vacuum -- //
   std::vector<G4double> photonEWorld = {hc/(1200*nm), hc/(100*nm)}; // set n=1 everywhere
   std::vector<G4double> nWorld = {1.00, 1.00};   
+  std::vector<G4double> kWorld = {0.00, 0.00};   
   G4MaterialPropertiesTable *mpt_vacuum = new G4MaterialPropertiesTable();
-  mpt_vacuum->AddProperty("RINDEX", photonEWorld, nWorld); //2 is for length of arrays
   mVacuum = nist->FindOrBuildMaterial("G4_Galactic");
+  mpt_vacuum->AddProperty("RINDEX", photonEWorld, nWorld);
   mVacuum->SetMaterialPropertiesTable(mpt_vacuum);
   
   // -- air -- //
   mAir = nist->FindOrBuildMaterial("G4_AIR");
   G4MaterialPropertiesTable *mptAir = new G4MaterialPropertiesTable();
-  mptAir->AddProperty("RINDEX", "Air");
+  mptAir->AddProperty("RINDEX", photonEWorld, nWorld);
   mAir->SetMaterialPropertiesTable(mptAir);
-  // mptAir->DumpTable();
+
+  opSurf_Air = new G4OpticalSurface("air_opSurf", unified, polished, dielectric_dielectric);
+  opSurf_Air->SetSigmaAlpha(0.);
+  opSurf_Air->SetMaterialPropertiesTable(mptAir);
+
+  // -------------------- General Surfaces --------------------//
+  //-- perfect transmission --//
+  opSurf_perfectTrans = new G4OpticalSurface("perfectTrans_opSurf");
+  opSurf_perfectTrans->SetModel(unified);
+  opSurf_perfectTrans->SetType(dielectric_metal);
+  opSurf_perfectTrans->SetFinish(polished); //could also use dielectric_dielectric -> polished front painted
+  opSurf_perfectTrans->SetSigmaAlpha(0.); // perfectly smooth
+  
+  G4double t = 1.0;
+  std::vector<G4double> photonE_perfectTrans = {1.0*eV, 12.4*eV};
+  std::vector<G4double> transPerfect = {t, t};
+  std::vector<G4double> noRef = {1.0-t, 1.0-t};
+
+  G4MaterialPropertiesTable* mpt_perfectTrans = new G4MaterialPropertiesTable();
+  mpt_perfectTrans->AddProperty("TRANSMITTANCE", photonE_perfectTrans, transPerfect);
+  mpt_perfectTrans->AddProperty("REFLECTIVITY", photonE_perfectTrans, noRef);
+  opSurf_perfectTrans->SetMaterialPropertiesTable(mpt_perfectTrans);
+
+  //-- perfect reflection --//
+  opSurf_perfectRef = new G4OpticalSurface("perfectTrans_opSurf", unified, polished, dielectric_metal);
+  opSurf_perfectRef->SetSigmaAlpha(0.); // perfectly smooth.  //could also use dielectric_dielectric -> polishedfrontpainted
+  G4MaterialPropertiesTable* mpt_perfectRef = new G4MaterialPropertiesTable();
+  mpt_perfectRef->AddProperty("TRANSMITTANCE", photonE_perfectTrans, noRef);
+  mpt_perfectRef->AddProperty("REFLECTIVITY", photonE_perfectTrans, transPerfect);
+  opSurf_perfectRef->SetMaterialPropertiesTable(mpt_perfectRef);
+
+  // -------------------- Liquid Xenon --------------------//
+  mLXe = new G4Material("LXe", 54., 131.29 * g / mole, 3.020 * g / cm3);
+  G4MaterialPropertiesTable * mptLXe = new G4MaterialPropertiesTable();
+  std::vector<G4double> photonE_lxe, n_lxe;
+  OH::ReadAndFillArray("dataOptics/lxe_n_merged_wl.txt", photonE_lxe, n_lxe, verb = MG::GetVerbosity(), scale1 = nm, 1., flipWL = true); // scale um to nm, flip wavelengths to eV
+  mptLXe->AddProperty("RINDEX", photonE_lxe, n_lxe);
+  mLXe->SetMaterialPropertiesTable(mptLXe);
+
+  // mptLXe->DumpTable();
+  // exit(0);
 
   // -------------------- Generic CF4 stuff --------------------//
   // -- Elements in CF4 -- //
@@ -98,8 +146,6 @@ void DetectorMaterials::BuildMaterials(){
   mGasCF4->AddElement(elCarbon, 1);
   mGasCF4->AddElement(elFluorine, 4);
   #include "Optics/GasCF4.icc" // all the physics is in here
-  
-
 
   // -------------------- Liquid CF4 --------------------//
 
@@ -123,73 +169,125 @@ void DetectorMaterials::BuildMaterials(){
   std::reverse(liq_cf4_photonE.begin(), liq_cf4_photonE.end());
   std::reverse(liq_cf4_n.begin(), liq_cf4_n.end());
 
-  mpt_liquidCF4->AddProperty("RINDEX", liq_cf4_photonE, liq_cf4_n);
+  // #if not USE_METAL_COMPLEX
+    mpt_liquidCF4->AddProperty("RINDEX", liq_cf4_photonE, liq_cf4_n);
+  // #else
+  //  mpt_liquidCF4->AddProperty("REALRINDEX", liq_cf4_photonE, liq_cf4_n);
+  // #endif
   mLiquidCF4->SetMaterialPropertiesTable(mpt_liquidCF4);
   
   
   // -------------------- GAr --------------------//
   // 
 
-
-  // -------------------- SiPM Stuff --------------------//
-  // -- Quartz/SiO2 -- //
+  // -------------------- Quartz/SiO2 --------------------//
+  // -- Quartz/SiO2 Bulk -- //
   mQuartz = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
-  G4MaterialPropertiesTable *mptQuartz = new G4MaterialPropertiesTable();
   
-  // std::vector<G4double> photonE_Quartz, nQuartz, photonE_kQuartz, kQuartz;
-  // OH::ReadAndFillArray("dataOptics/sio2_INDEX_fusedQuartz_uv_web.txt", photonE_Quartz, nQuartz, MG::GetVerbosity(), 1., 1., true); // no scaling, flip wavelengths to eV
-  // std::reverse(photonE_Quartz.begin(), photonE_Quartz.end());
-  // std::reverse(nQuartz.begin(), nQuartz.end());
+  std::vector<G4double> photonE_nQuartz, nQuartz, photonE_kQuartz, kQuartz;
+  OH::ReadAndFillArray("dataOptics/sio2_n_wl.txt", photonE_nQuartz, nQuartz, verb = MG::GetVerbosity(), scale1 = nm, 1., flipWL = true); // no scaling, flip wavelengths to eV
+  OH::ReadAndFillArray("dataOptics/sio2_k_wl.txt", photonE_kQuartz, kQuartz, verb = MG::GetVerbosity(), scale1 = nm, 1., flipWL = true); // no scaling, flip wavelengths to eV
 
-  // OH::ReadAndFillArray("dataOptics/sio2_KINDEX_fusedQuartz_uv_web.txt", photonE_kQuartz, kQuartz, MG::GetVerbosity(), 1., 1., true); // no scaling, flip wavelengths to eV
-  // std::reverse(photonE_kQuartz.begin(), photonE_kQuartz.end());
-  // std::reverse(kQuartz.begin(), kQuartz.end());
+  std::vector<G4double> photonE_absLQuartz, absLQuartz;
+  OH::ReadAndFillArray("dataOptics/quartz_absLength.txt", photonE_absLQuartz, absLQuartz, verb = MG::GetVerbosity(), scale1 = nm, scale2 = um, flipWL = true); // no scaling, flip wavelengths to eV
 
-  // mptQuartz->AddProperty("RINDEX", photonE_Quartz, nQuartz);
+  // to absorb all photons in bulk
+  // std::vector<G4double> kAbsorb = {100.00, 100.00};  
+  // std::vector<G4double> quartzAbs_eV, quartzAbsLength;
 
-  // use built in RINDEX
-  mptQuartz->AddProperty("RINDEX", "Fused Silica");
-  // mptQuartz->AddProperty("RINDEX", "Fused Silica");
+  G4MaterialPropertiesTable *mptQuartz = new G4MaterialPropertiesTable();
+  // mptQuartz->AddProperty("ABSLENGTH", photonE_absLQuartz, absLQuartz);
+
+  mptQuartz->AddProperty("RINDEX", photonE_nQuartz, nQuartz);
+  // mptQuartz->AddProperty("RINDEX", photonEWorld, {100, 100}); // testing
   mQuartz->SetMaterialPropertiesTable(mptQuartz);
 
-  mptQuartz->DumpTable();
-  exit(0);
+  // -- Quartz/SiO2 Surface -- //
+  opSurf_Quartz = new G4OpticalSurface("quartzWindow_opSurf", unified, polished, dielectric_dielectric);
+  opSurf_Quartz->SetSigmaAlpha(0.);
 
+  G4MaterialPropertiesTable *mpt_quartzSurf = new G4MaterialPropertiesTable();
+  // mpt_quartzSurf->AddProperty("REALRINDEX", photonE_nQuartz, nQuartz); // not dielectric
+  // mpt_quartzSurf->AddProperty("IMAGINARYRINDEX", photonE_kQuartz, kQuartz);
+  mpt_quartzSurf->AddProperty("RINDEX", photonE_nQuartz, nQuartz);
+  // mpt_quartzSurf->AddProperty("RINDEX", photonEWorld, {100, 100});
+  // mpt_quartzSurf->AddProperty("IMAGINARYRINDEX", photonEWorld, {4, 4});
+
+  opSurf_Quartz->SetMaterialPropertiesTable(mpt_quartzSurf);
+
+  // mpt_quartzSurf->DumpTable();
+
+  //-- SiPM surface quartz --//
+  // opSurf_surfaceQuartz = new G4OpticalSurface("quartzSiPM_opSurf");
+  // opSurf_surfaceQuartz->SetModel(unified);
+  // opSurf_surfaceQuartz->SetType(dielectric_metal);
+  // opSurf_surfaceQuartz->SetFinish(polished);
+  // opSurf_surfaceQuartz->SetSigmaAlpha(0.);
+
+  // G4MaterialPropertiesTable *mpt_quartzSiliconSurf = new G4MaterialPropertiesTable();
+  // // mpt_quartzSiliconSurf->AddProperty("RINDEX", photonE_nQuartz, nQuartz);
+  // mpt_quartzSiliconSurf->AddProperty("REALRINDEX", photonE_nQuartz, nQuartz);
+  // mpt_quartzSiliconSurf->AddProperty("IMAGINARYRINDEX", photonE_kQuartz, kQuartz);
+  // opSurf_surfaceQuartz->SetMaterialPropertiesTable(mpt_quartzSiliconSurf);
+  
+  // opSurf_surfaceQuartz = opSurf_Quartz; // use this if you want both quartz to be the same
+
+  // no heavy quartz inside detector
   // mHeavyQuartz = nist->FindOrBuildMaterials("G4_MAGNESIUM_FLUORIDE");
   // mHeavyQuartz = nist->FindOrBuildMaterial("G4_BORON_OXIDE");
 
-  // -- Silicon -- //
+  // -------------------- Silicon -------------------- //
+  // -- Silicon Bulk -- //
   mSilicon = nist->FindOrBuildMaterial("G4_Si");
-  std::vector<G4double> photonE_Si, nSi;
-  OH::ReadAndFillArray("dataOptics/siliconRINDEX_100nm_Pierce.txt", photonE_Si, nSi, MG::GetVerbosity(), 1000., 1., true); // no scaling, flip wavelengths to eV
-  std::reverse(photonE_Si.begin(), photonE_Si.end());
-  std::reverse(nSi.begin(), nSi.end());
+  std::vector<G4double> photonE_nSilicon, nSi, photonE_kSilicon, kSilicon;
+
+  std::string silicon_nFile = "dataOptics/silicon_merged_n_wl.txt";
+  std::string silicon_kFile = "dataOptics/silicon_merged_k_wl.txt";
+  // using amorphous
+  silicon_nFile = "dataOptics/silicon_n_amorphous_wl.txt";
+  silicon_kFile = "dataOptics/silicon_k_amorphous_wl.txt";
+
+  OH::ReadAndFillArray(silicon_nFile, photonE_nSilicon, nSi, verb = MG::GetVerbosity(), scale1 = nm, 1., flipWL = true); // scale um to nm, flip wavelengths to eV
+  OH::ReadAndFillArray(silicon_kFile, photonE_kSilicon, kSilicon, verb = MG::GetVerbosity() , scale1 = nm, 1., flipWL = true); // scale um to nm, flip wavelengths to eV
 
   G4MaterialPropertiesTable *mptSi = new G4MaterialPropertiesTable();
-  mptSi->AddProperty("RINDEX", photonE_Si, nSi);
-  // mptSi->DumpTable();
+  mptSi->AddProperty("RINDEX", photonE_nSilicon, nSi);
+
+  // cheating to fix group velocities, because n<1 is not allowed by G4
+  std::vector<G4double> photonE_gv = {1.0*eV, 12*eV};
+  std::vector<G4double> gv = {CLHEP::c_light/2, CLHEP::c_light/2};
+  mptSi->AddProperty("GROUPVEL", photonE_gv, gv);
   mSilicon->SetMaterialPropertiesTable(mptSi);
 
-  /*
-  // added by Ryan, SiPM optical properties////////////////////
-  ///https://refractiveindex.info/?shelf=main&book=Si&page=Aspnes////
+  // -- silicon surface --//
+  opSurf_silicon = new G4OpticalSurface("silicon_opSurf", unified, polished, dielectric_metal);
+  opSurf_silicon->SetSigmaAlpha(0.);
 
-  const G4int SIPM_NUMENTRIES=46;
-  G4double SIPM_PP[SIPM_NUMENTRIES]   =
-  {1.499929801*eV,1.600002547*eV,1.700043842*eV,1.800002866*eV,1.900140956*eV,2.000067711*eV,2.100003343*eV,2.199861558*eV,2.299836716*eV,2.400003821*eV,2.500185469*eV,2.599794451*eV,2.700004298*eV,2.800004458*eV,2.900215144*eV,2.999859603*eV,3.10038003*eV,3.199592191*eV,3.300085105*eV,3.399621535*eV,3.50040083*eV,3.600005731*eV,3.699916365*eV,3.799699583*eV,3.900100578*eV,3.999490238*eV,4.100006527*eV,4.200006687*eV,4.300527138*eV,4.399723115*eV,4.500333843*eV,4.600526805*eV,4.699931667*eV,4.800007642*eV,4.900561162*eV,4.999362798*eV,5.100131526*eV,5.200679421*eV,5.300735245*eV,5.400008597*eV,5.500629875*eV,5.600008915*eV,5.700422868*eV,5.799073779*eV,5.901199304*eV,6.001171219*eV}; // lambda range 4 ri
+  G4MaterialPropertiesTable *mpt_siliconSurf = new G4MaterialPropertiesTable();
+  mpt_siliconSurf->AddProperty("REALRINDEX", photonE_nSilicon, nSi);
+  mpt_siliconSurf->AddProperty("IMAGINARYRINDEX", photonE_kSilicon, kSilicon);
+  // mpt_siliconSurf->AddProperty("REALRINDEX", photonEWorld, {1000.0, 1000.0});
+  // mpt_siliconSurf->AddProperty("IMAGINARYRINDEX", photonEWorld, {1000.0, 1000.0});
+  mpt_siliconSurf->AddProperty("TRANSMITTANCE", photonE_perfectTrans, transPerfect); // needed
 
-  G4double SIPM_RIND[SIPM_NUMENTRIES] = {3.673,3.714,3.752,3.796,3.847,3.906,3.969,4.042,4.123,4.215,4.32,4.442,4.583,4.753,4.961,5.222,5.57,6.062,6.709,6.522,5.61,5.296,
-  5.156,5.065,5.016,5.01,5.02,4.888,4.087,3.12,2.452,1.988,1.764,1.658,1.597,1.57,1.571,1.589,1.579,1.471,1.34,1.247,1.186,1.133,1.083,1.01};// ref index
+  opSurf_silicon->SetMaterialPropertiesTable(mpt_siliconSurf);
 
-  G4double SIPM_ABSL[SIPM_NUMENTRIES] = {13156.1356*nm,7708.300175*nm,5803.756167*nm,4216.506079*nm,3245.364476*nm,2242.342251*nm,1566.130829*nm,1401.599554*nm,893.7808372*nm,685.1822378*nm,540.5976989*nm,421.6846163*nm,281.1004052*nm,216.1837034*nm,167.5880415*nm,122.2689183*nm,82.23247918*nm,48.94790427*nm,22.65010442*nm,10.72930123*nm,9.352080867*nm,9.175523773*nm,8.72046998*nm,8.160557761*nm,7.56079627*nm,6.879460054*nm,6.047986211*nm,5.064014322*nm,4.252615698*nm,4.196405851*nm,4.314096815*nm,4.584600492*nm,4.907236123*nm,5.165988222*nm,5.370417203*nm,5.535987378*nm,5.641835489*nm,5.656478457*nm,5.551362828*nm,5.428260945*nm,5.432250485*nm,5.495624401*nm,5.547631582*nm,5.587574781*nm,5.606881247*nm,5.651835859*nm};// atten length
+  // -- test Surface -- //
+  // testSurf = new G4OpticalSurface("testSurf", unified, polished, dielectric_dielectric);
+  // testSurf->SetSigmaAlpha(0.);
 
-  G4MaterialPropertiesTable *SIPM_mt = new G4MaterialPropertiesTable();
-  SIPM_mt->AddProperty("RINDEX", SIPM_PP, SIPM_RIND, SIPM_NUMENTRIES);
-  SIPM_mt->AddProperty("ABSLENGTH", SIPM_PP, SIPM_ABSL, SIPM_NUMENTRIES);
-  SIPM->SetMaterialPropertiesTable(SIPM_mt);
-  */
+  // G4MaterialPropertiesTable *mpt_test = new G4MaterialPropertiesTable();
+  // std::vector<G4double> e1 = {1.0*eV, 12*eV};
+  // std::vector<G4double> e2 = {0.0, 0.0};
+  // mpt_test->AddProperty("REALRINDEX", photonE_nQuartz, nQuartz);
+  // // mpt_test->AddProperty("IMAGINARYRINDEX", photonE_kQuartz, kQuartz);
+  // // mpt_test->AddProperty("IMAGINARYRINDEX", e1, e2);
+  // // // mpt_test->AddProperty("REALRINDEX", photonE_nSilicon, nSi);
+  // // // mpt_test->AddProperty("IMAGINARYRINDEX", photonE_kSilicon, kSilicon);
+
+  // testSurf->SetMaterialPropertiesTable(mpt_test);
   
-  // -------------------- More Stuff --------------------//
+
   return;
 }
 

@@ -14,13 +14,15 @@
 
 /process/em/verbose 0
 /process/optical/verbose 0
+/process/optical/boundary/verbose 0
 #/process/optical/scintillation/verbose 1
 
 ### Material Properties ###
 #/setMaterial/detectionMedium gCF4        # default is gas
 #/setMaterial/detectionMedium gAr         # currently undefined
-/setMaterial/detectionMedium air
+#/setMaterial/detectionMedium air
 #/setMaterial/detectionMedium lCF4         # see Optics/material for default LYs
+/setMaterial/detectionMedium lxe
 
 # not implemented
 #/setMaterial/mediumDensity 1.69 g/cm3  # use this to set density directly. Takes precendece over density calculated by SetTemp. default densities given in DetectorMaterials.cc

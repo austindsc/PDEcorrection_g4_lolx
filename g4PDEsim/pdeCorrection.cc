@@ -67,6 +67,12 @@ int main(int argc,char** argv)
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   UImanager->SetVerboseLevel(0);
 
+  #if USE_METAL_COMPLEX
+    std::cout << "using metal complex - Complex and Real Index" << std::endl;
+  #else
+    std::cout << "Using normal RINDEX" << std::endl;
+  #endif
+
   // Process macro or start UI session
   if ( ! ui ) { 
     // batch mode
