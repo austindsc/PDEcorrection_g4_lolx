@@ -6,19 +6,30 @@
 // this is just a global header to control verbosity across any files I want.
 // simply add #include "myGlobals.hh" to any file using them. only use the getters
 
-// want to avoid doing a singleton class, so i do it a different way
+// want to avoid doing a singleton class, so i do it a different way using namespace
 // can't do private in a namespace, so just give getters and setters here.
 // then define the variables as static in the .cc file (only seen from .cc file)
+// you can define them as 'extern' here and normally in the .cc file - then any code can see them
+// i prefer to define them as static in the .cc file, so no other files can change them
 
 namespace MG{
 
   // things defined in the .cc file
   // extern int atownsNumber; // testing
   // extern int myVerbose;
-
   void SetVerbosity(int a);
   int GetVerbosity();
-  int GetTesting();
+
+  // toggling the PDE technique
+  enum TestingMode {
+    OldWay = 0,  // any photon touches photon backing calls ProcessHits
+    NewWay = 1   // photons that hit the bulk and aren't reflected (EFFICIENCY = 100)
+                  // call custom processHits method in sensitive SiPM
+  };
+
+  // extern TestingMode testingPDE;
+  void SetPDETesting(TestingMode a);
+  TestingMode GetPDETesting();
 }
 
 namespace DETECTORSETUP{

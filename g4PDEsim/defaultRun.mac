@@ -15,6 +15,7 @@
 /process/em/verbose 0
 /process/optical/verbose 0
 /process/optical/boundary/verbose 0
+/process/optical/absorption/verbose 0
 #/process/optical/scintillation/verbose 1
 
 ### Material Properties ###

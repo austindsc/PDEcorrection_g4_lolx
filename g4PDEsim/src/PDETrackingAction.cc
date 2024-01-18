@@ -50,7 +50,7 @@ void PDETrackingAction::PostUserTrackingAction(const G4Track* track){
   else if(flowestVolume == fDetCons->fLogBacking){
     if(MG::GetVerbosity() > verbThreshold)G4cout << "++ backing" << G4endl;
     
-    // if(MG::GetTesting() == 0 && 1 == 2) fEvAction->AddInBulk(); // don't do this here. all done from processHits now
+    // if(MG::GetPDETesting() == MG::OldWay && 1 == 2) fEvAction->AddInBulk(); // don't do this here. all done from processHits now
   }
   else{
     if(MG::GetVerbosity() > verbThreshold) G4cout << "ERROR: photon not detected" << G4endl;

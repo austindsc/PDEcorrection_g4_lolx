@@ -25,15 +25,15 @@ SensitiveSIPM::SensitiveSIPM(G4String name) : G4VSensitiveDetector(name )
   OH::LoadTxt_OrderedVector("dataOptics/effective_internalPDE.txt", ovecPDE, MG::GetVerbosity(), nm, 1.);
   if(MG::GetVerbosity() > 1) ovecPDE->DumpValues();
 
-  if(MG::GetTesting() == 1){
-    G4cout << "------------------------ SiPM Implementation ------------------------\n"
+  if(MG::GetPDETesting() == MG::NewWay){
+    G4cout << "------------------------ SiPM Implementation: NEWWAY ------------------------\n"
     "using custom ProcessHits_photonAtBoundary, and defining efficiency for SiPM bulk."
     "Then no backing SiPM is required. Stepping action has to check for optical photon"
     "DETECTED status and manually call ProcessHits_photonAtBoundary.\n"
     "------------------------  ------------------------" << G4endl;
-  } else {
+  } else if(MG::GetPDETesting() == MG::OldWay) {
     G4cout << 
-    "------------------------ SiPM Implementation ------------------------\n"
+    "------------------------ SiPM Implementation: OLDWAY ------------------------\n"
     "using normal ProcessHits in sensitive detector, which requires a second backing detector to be defined."
     "All of the photons need to be transmitted from bulk to backing (define 100% transmission layer) and then any photons"
     "that touch the backing detector call ProcessHits() which kills the track.\n"
@@ -46,9 +46,10 @@ SensitiveSIPM::~SensitiveSIPM()
 
 G4bool SensitiveSIPM::ProcessHits(G4Step * step, G4TouchableHistory *ROhist){
   // add this call to avoid double counting or accidental counting, if ProcessHits gets called
-  // by some other particle or action
-  if(MG::GetTesting() == 0){
+  // by some other particle or action when using the NewWay
+  if(MG::GetPDETesting() == MG::OldWay){
     this->ProcessHits_photonAtBoundary(step);
+    return true;
   }
   return false;
 }

@@ -126,7 +126,7 @@ void PDESteppingAction::UserSteppingAction(const G4Step* step)
   }
 
  // xx adding
-  if(track->GetDefinition() == opticalphoton && MG::GetTesting() == 1){ // Optical photon only
+  if(track->GetDefinition() == opticalphoton && MG::GetPDETesting() == MG::NewWay){ // Optical photon only
 
     // Was the photon absorbed by the absorption process
     // if(thePostPoint->GetProcessDefinedStep()->GetProcessName() ==

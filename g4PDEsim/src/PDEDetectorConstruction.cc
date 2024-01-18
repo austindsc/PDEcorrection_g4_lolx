@@ -244,7 +244,7 @@ G4VPhysicalVolume* PDEDetectorConstruction::Construct()
 
   //------ IMPORTANT ------//
   // setting items for usage elsewhere
-  if(MG::GetTesting() == 1)fsipmDetectionBack = logic_sipmBulk; //xx detect on the front of the sipm bulk
+  if(MG::GetPDETesting() == MG::NewWay)fsipmDetectionBack = logic_sipmBulk; //xx detect on the front of the sipm bulk
   else{ fsipmDetectionBack = logic_sipmBack; }// very important!
   
   fBulkZ = phys_sipmBulk->GetTranslation().z();

@@ -5,21 +5,15 @@
 namespace MG{
   static int atownsNumber = 69;
   static int myVerbose = 0;
-
-  enum TestPDEMode {
-    OldWay = 0,  // any photon touches photon backing calls ProcessHits
-    NewWay = 1   // photons that hit the bulk and aren't reflected (EFFICIENCY = 100)
-                  // call custom processHits method in sensitive SiPM
-  };
-  // static int myTesting = 0;  // 0 - do things the old way (any photon touches photon backing)
-  static int myTesting = 0;     // 1 - do things the new way (photons that hit the bulk and aren't reflected (EFFICIENCY = 100)
-                                // call custom processHits method in sensitive SiPM
-  // a better way to do this toggling would be to define a preCompiler command,
-  // or define some variables that are the different 'cases'
-  
   void SetVerbosity(int a){ myVerbose = a;}
   int GetVerbosity(){ return myVerbose; }
-  int GetTesting(){ return myTesting; }
+
+  // -- PDE toggling --//
+  // default behaviour is newWay
+  static TestingMode testingPDE = NewWay;
+  
+  TestingMode GetPDETesting(){ return testingPDE; }
+  void SetPDETesting(TestingMode a) { testingPDE = a; }
 }
 
 namespace DETECTORSETUP{

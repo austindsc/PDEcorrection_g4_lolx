@@ -271,7 +271,7 @@ void PDEDetectorMaterials::BuildMaterials(){
   // mpt_siliconSurf->AddProperty("REALRINDEX", photonE_world, {1000.0, 1000.0});
   // mpt_siliconSurf->AddProperty("IMAGINARYRINDEX", photonE_world, {1000.0, 1000.0});
   
-  if(MG::GetTesting() == 1){
+  if(MG::GetPDETesting() == MG::NewWay){
     mpt_siliconSurf->AddProperty("EFFICIENCY", photonE_world, {1.0, 1.0}); // xx perfect efficiency (for non reflected photons)
   } else {
     mpt_siliconSurf->AddProperty("TRANSMITTANCE", photonE_perfectTrans, transPerfect); // needed to get the nonReflected photons inside the bulk to the backing (no abs)
