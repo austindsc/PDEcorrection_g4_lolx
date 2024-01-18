@@ -3,6 +3,9 @@
 #include "G4PhysicsOrderedFreeVector.hh"
 #include "G4RunManager.hh"
 
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTypes.hh"
+
 #include "PDEEventAction.hh"
 #include "HelperFunctions.hh"
 #include "myGlobals.hh"
@@ -12,59 +15,70 @@
 SensitiveSIPM::SensitiveSIPM(G4String name) : G4VSensitiveDetector(name )
 {
   fEventAction = (PDEEventAction *) G4RunManager::GetRunManager()->GetUserEventAction();
+  fhc = CLHEP::h_Planck * CLHEP::c_light;
 
   // adding PDE
-  ovecPDE = new G4PhysicsFreeVector(true);
+  ovecPDE = new G4PhysicsFreeVector(false);
   
-  OH::LoadTxt_OrderedVector("dataOptics/SiPMeff_Ham_5V.dat", ovecPDE, MG::GetVerbosity(), 1, 1./100);
-  // ovecPDE->DumpValues();
+  G4double scaleX, scaleY;
+  // using wavelengths, not energy, is okay. Do the efficiency call on my own
+  OH::LoadTxt_OrderedVector("dataOptics/effective_internalPDE.txt", ovecPDE, MG::GetVerbosity(), nm, 1.);
+  if(MG::GetVerbosity() > 1) ovecPDE->DumpValues();
+
+  if(MG::GetTesting() == 1){
+    G4cout << "------------------------ SiPM Implementation ------------------------\n"
+    "using custom ProcessHits_photonAtBoundary, and defining efficiency for SiPM bulk."
+    "Then no backing SiPM is required. Stepping action has to check for optical photon"
+    "DETECTED status and manually call ProcessHits_photonAtBoundary.\n"
+    "------------------------  ------------------------" << G4endl;
+  } else {
+    G4cout << 
+    "------------------------ SiPM Implementation ------------------------\n"
+    "using normal ProcessHits in sensitive detector, which requires a second backing detector to be defined."
+    "All of the photons need to be transmitted from bulk to backing (define 100% transmission layer) and then any photons"
+    "that touch the backing detector call ProcessHits() which kills the track.\n"
+    "------------------------  ------------------------" << G4endl;
+  }
 }
 
 SensitiveSIPM::~SensitiveSIPM()
 {}
 
-// all this does is kill the track
 G4bool SensitiveSIPM::ProcessHits(G4Step * step, G4TouchableHistory *ROhist){
+  // add this call to avoid double counting or accidental counting, if ProcessHits gets called
+  // by some other particle or action
+  if(MG::GetTesting() == 0){
+    this->ProcessHits_photonAtBoundary(step);
+  }
+  return false;
+}
 
-  // I think I can do this a different way
-  // 1. get the track
-  // 2. 
-
+G4bool SensitiveSIPM::ProcessHits_photonAtBoundary(const G4Step * step){
+  if(MG::GetVerbosity() > 1)G4cout << "ProcessHits_photonAtBounday" << G4endl;
+  
   G4Track * track = step->GetTrack();
-  track->SetTrackStatus(fStopAndKill);
+  if(track->GetDefinition() != G4OpticalPhoton::OpticalPhotonDefinition()) return false; // need to know if this is an optical photon
+  track->SetTrackStatus(fStopAndKill); // this is for vanilla method (called by ProcessHits())
+  
+  fEventAction->AddInBulk(); // photon touched
 
+  G4StepPoint * preStepPoint = step->GetPreStepPoint(); // entering detector
+  G4StepPoint * postStepPoint = step->GetPostStepPoint(); // leaving detector?
+  
+  G4ThreeVector pPhoton = preStepPoint->GetMomentum();
+  G4double wlen = fhc/pPhoton.mag(); //wavelength in nanometers 
 
-  // exit(0);
-  // G4LogicalVolume* preVolume = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
-  // G4LogicalVolume* postVolume = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
-  // G4cout << "preVolume: " << preVolume->GetName() << G4endl;
-  // G4cout << "postVolume: " << postVolume->GetName() << G4endl;
+  // G4cout << "PDE at this is " << ovecPDE->Value((wlen)) << G4endl;
+  
+  if(MG::GetVerbosity() >= 2)G4cout << "MC truth Hit! wl = " << wlen/nm << " nm" << G4endl;
 
-
-  // if (step->GetPreStepPoint()->GetTouchableHandle()->GetVolume() ==preVolume) {
-  //   track->SetTrackStatus(fStopAndKill);
-  //   G4cout << "satisfied" << G4endl;
-    // return;
-    // }
-  // G4StepPoint * preStepPoint = step->GetPreStepPoint(); // entering detector
-  // G4StepPoint * postStepPoint = step->GetPostStepPoint(); // leaving detector?
+  // With Efficiencies
+  if(G4UniformRand() < ovecPDE->Value(wlen)){
+    if(MG::GetVerbosity() >= 2)G4cout << "PDE hit! wl = " << wlen/nm << " nm" <<G4endl;
+    fEventAction->AddInBulkAfterPDE();
+  }
   
   // G4ThreeVector posPhoton = preStepPoint->GetPosition();
-  // G4ThreeVector pPhoton = preStepPoint->GetMomentum();
-  // G4double wlen = (1239.8*eV/pPhoton.mag()) * nm; //wavelength in nanometers 
-  
-  // if(MG::GetVerbosity() >= 2)G4cout << "MC Hit! wl = " << wlen/nm << " nm" << G4endl;
-
-
-  // fEventAction->AddInBulk(); 
-
-  // no PDE requested right now
-  // With Efficiencies
-  // if(G4UniformRand() < ovecPDE->Value(wlen)){
-  //   if(MG::GetVerbosity() >= 2)G4cout << "Raw hit! wl = " << wlen/nm << " nm" <<G4endl;
-    
-  // }
-  
   // G4cout << "photon hit!: " << posPhoton << G4endl;
   
   

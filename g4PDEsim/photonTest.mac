@@ -1,20 +1,21 @@
-# this produces many photons from all over a disk
-
-
 /gps/particle opticalphoton
-/gps/energy 5 eV
 /gps/pos/type Point
-/gps/number 100000
+
+#/gps/pos/type Plane
+#/gps/pos/shape Circle
+#/gps/pos/radius 2 cm
+
+/gps/number 1000
 
 #/gps/pos/centre 0. 0. -0.5 cm # photons out
 #/gps/direction 0. 1 1 
 
-/gps/pos/centre 0. -9.5 0.5 cm # photons in
+/gps/pos/centre 0. -2. 0.75 cm # photons in
 #/gps/direction 0. 1. -1 
 
-#/gps/ene/mono 4 eV
+/gps/ene/mono 1.5 eV
 #/gps/ene/mono 2 eV
-/gps/ene/mono 7.1 eV # lXe peak
+#/gps/ene/mono 7.1 eV # lXe peak
 
 /gps/ang/mintheta 15.0 deg 
 /gps/ang/maxtheta 15.0 deg

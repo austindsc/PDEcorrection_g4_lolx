@@ -1,6 +1,9 @@
 /// \file pdeCorrection.cc
 /// \brief Main program of the PDE example
 
+#include "myGlobals.hh"
+#include "HelperFunctions.hh"
+
 #include "PDEDetectorConstruction.hh"
 #include "PDEActionInitialization.hh"
 
@@ -17,7 +20,6 @@
 
 #include "G4SystemOfUnits.hh"
 
-//xx physics list testing
 #include "FTFP_BERT.hh"
 #include "G4EmStandardPhysics_option4.hh"
 #include "G4OpticalParameters.hh"

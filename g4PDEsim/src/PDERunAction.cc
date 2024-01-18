@@ -44,6 +44,7 @@ PDERunAction::PDERunAction(PDEPrimaryGeneratorAction * genny)
   man->CreateNtupleIColumn("fNonSurface");    //4 - hitting surface layer(no PDE)
   man->CreateNtupleIColumn("fNonBulk");       //5 - inside surface layer
   man->CreateNtupleIColumn("fNinBulk");       //6 - passing into bulk (what we want)
+  man->CreateNtupleIColumn("fNinBulkPDE");        //7 - N in bulk after PDEp
   man->FinishNtuple();
 
   // man->OpenFile();

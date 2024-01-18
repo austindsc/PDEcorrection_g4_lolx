@@ -11,6 +11,8 @@ myVerbosity = 0
 pickMedium = "lxe"
 mediumOptions = ["air", "lcf4", "lxe"] # need to compare to G4 code if you add stuff
 
+cosineAngleSpacing = True # use non-linear spacing
+
 for med in mediumOptions:
   pickMedium = med
   ## same input, output for one wavelength
@@ -21,7 +23,7 @@ for med in mediumOptions:
   ## same as above for fixed angle
   angleLow = 0
   angleHigh = 85
-  angleStep = 5
+  angleStep = 15
 
   fixedPhi = -90 # leave this
   tRad = np.pi/180 # don't change this lol
@@ -31,7 +33,7 @@ for med in mediumOptions:
 
   nstring = f"{Nphoton:e}"; 
   nstring = nstring.replace("0", "").replace(".", "").replace("+", "")
-  outputName = f"surface_{pickMedium}_N{nstring}_{wlStart}-{wlEnd}nm_{angleLow}-{angleHigh}deg.mac"
+  outputName = f"final_{pickMedium}_N{nstring}_{wlStart}-{wlEnd}nm_{angleLow}-{angleHigh}deg.mac"
 
   strVerbosities = """
   /vis/verbose 0
@@ -68,8 +70,9 @@ for med in mediumOptions:
   wavelengths = np.arange(start = wlStart, stop = wlEnd + wlStep, step=wlStep)
   numAngles = int((angleHigh - angleLow)/angleStep)
   numAngles = 1 if numAngles == 0 else numAngles # if we want a single angle
-  # angles = (1/tRad) * np.arccos(np.linspace(np.cos(angleLow*tRad), np.cos(angleHigh*tRad), num = numAngles, endpoint= True)) # do spacing linear in cos(theta)
-  angles = np.linspace(angleLow, angleHigh, num = numAngles+1, endpoint= True)
+  angles = (1/tRad) * np.arccos(np.linspace(np.cos(angleLow*tRad), np.cos(angleHigh*tRad), num = numAngles, endpoint= True)) # do spacing linear in cos(theta)
+  if cosineAngleSpacing == False:
+    angles = np.linspace(angleLow, angleHigh, num = numAngles+1, endpoint= True)
 
   # Get the directory of the current script
   script_path = os.path.abspath(__file__)

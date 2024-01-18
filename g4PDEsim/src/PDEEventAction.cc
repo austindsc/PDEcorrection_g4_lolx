@@ -45,8 +45,6 @@ void PDEEventAction::BeginOfEventAction(const G4Event*)
   G4double hc = CLHEP::h_Planck * CLHEP::c_light;
   G4GeneralParticleSource * tGun = fRunAction->fGenerator->fGun;
 
-  // G4cout <<"xx resetting variables in BOEA" << G4endl;
-
   fNphotonFired = tGun->GetNumberOfParticles();
   fPhotonWavelength = hc/(tGun->GetCurrentSource()->GetParticleEnergy())/nm;
   fAngle = 180 - tGun->GetCurrentSource()->GetParticleMomentumDirection().theta()/deg;
@@ -56,6 +54,7 @@ void PDEEventAction::BeginOfEventAction(const G4Event*)
   fNonSurface = 0;
   fNonBulk = 0;
   fNinBulk = 0;
+  fNinBulkAfterPDE = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -70,6 +69,7 @@ void PDEEventAction::PrintOutput(int verb){
     G4cout << "Nsurface = " << fNonSurface << "\n";
     G4cout << "NBulk = " << fNonBulk << "\n";
     G4cout << "Ninside = " << fNinBulk << "\n";
+    G4cout << "NafterPDE = " << fNinBulkAfterPDE << "\n";
     G4cout << "fraction in = " << (float) fNinBulk/fNphotonFired << G4endl;
   }
 }
@@ -81,7 +81,6 @@ void PDEEventAction::EndOfEventAction(const G4Event*)
   fRunAction->ftotalHitPE += fNinBulk;
   fRunAction->ftotalFired += fNphotonFired;
 
-  // G4cout <<"xx printing variables in BOEA" << G4endl;
   this->PrintOutput();
 
   // for(int i = 0; i < 10; i++){
@@ -96,6 +95,7 @@ void PDEEventAction::EndOfEventAction(const G4Event*)
     man->FillNtupleIColumn(4, fNonSurface);
     man->FillNtupleIColumn(5, fNonBulk);
     man->FillNtupleIColumn(6, fNinBulk);
+    man->FillNtupleIColumn(7, fNinBulkAfterPDE);
     man->AddNtupleRow(0);
   }
   

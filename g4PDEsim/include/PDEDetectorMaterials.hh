@@ -34,7 +34,7 @@ public:
   PDEDetectorMaterials(PDEDetectorMaterials &other) = delete; // not cloneable
   void operator=(const PDEDetectorMaterials &) = delete;   // not assignable
   
-  static PDEDetectorMaterials *GetInstance();
+  static PDEDetectorMaterials * GetInstance();
   
 protected:
   PDEDetectorMaterials();
@@ -78,8 +78,12 @@ protected:
   // G4OpticalSurface * opSurf_surfaceQuartz;// if surface of sipm quartz is different
   G4OpticalSurface * testSurf;
   G4OpticalSurface * opSurf_silicon;      // silicon (bulk of SiPM)
+
   G4OpticalSurface * opSurf_perfectTrans; // full transmission, no refraction
   G4OpticalSurface * opSurf_perfectRef;   // full specular reflection
+
+  G4OpticalSurface * opSurf_myCorrector1_diffuserIn;  // my own optical surface for doing the PDE correction. applies absorption and diffusion to scale the G4 reflectivity to match that measured in vacuum (and do the PDE correction)
+  G4OpticalSurface * opSurf_myCorrector2_absorptionOut;
   
 
 };

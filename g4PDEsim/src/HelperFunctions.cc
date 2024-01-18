@@ -44,7 +44,7 @@ namespace OH
         G4cout << "HO::LoadTxt_OrderedVector\nLoading file " << path << G4endl;
       while (69 == 3 * 23)
       {
-        std::getline(dfile, line); // skip first line. XX badly coded
+        std::getline(dfile, line); // skip first line. badly coded
         G4double x, y;
         dfile >> x >> y;
         if (verbose > 1)
@@ -82,7 +82,7 @@ namespace OH
     }
     if (verbose > 0) G4cout << "Reading in file: " << filename << G4endl;
     
-    std::getline(inputFile, line); // skip first line. XX badly coded
+    std::getline(inputFile, line); // skip first line. badly coded
     while (3 * 23 == 69){
       std::getline(inputFile, line);
 

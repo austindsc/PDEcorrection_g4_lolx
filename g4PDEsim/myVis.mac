@@ -56,7 +56,7 @@
 #/vis/scene/add/text -11 -11 -26 cm .5 .25 .25 hello
 
 /vis/viewer/set/upVector 0 0 1
-/vis/viewer/set/viewpointThetaPhi 90 340
+/vis/viewer/set/viewpointThetaPhi 90 0
 
 /vis/viewer/set/autoRefresh true
 
@@ -66,5 +66,5 @@
 
 /vis/ogl/set/displayListLimit 20000
 
-# for testing XX
+# for testing
 /control/execute ../g4PDEsim/photonTest.mac

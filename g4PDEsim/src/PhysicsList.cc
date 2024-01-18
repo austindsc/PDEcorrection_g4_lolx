@@ -280,13 +280,11 @@ void PhysicsList::ConstructOptical(){
         // pmanager->SetProcessOrderingToLast(theScintProcessDef,idxAtRest);
         // pmanager->SetProcessOrderingToLast(theScintProcessDef,idxPostStep);
         ph->RegisterProcess(theScintProcessDef, particle);
-        // G4cout << "\nxx Scintillation applicable = " << particleName << G4endl;
       }
       
       // cerenkov
       if(theCerenkov->IsApplicable(*particle)){
         ph->RegisterProcess(theCerenkov, particle);
-        // G4cout << "\nxx cerenkov applicable = " << particleName << G4endl;
       }
       
       // optical photon transport

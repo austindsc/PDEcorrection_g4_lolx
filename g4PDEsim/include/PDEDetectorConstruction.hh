@@ -13,6 +13,7 @@
 class G4VPhysicalVolume;
 class PDEDetectorConstructionMessenger;
 class PDEDetectorMaterials;
+class SensitiveSIPM;
 
 /// Detector construction class to define materials and geometry.
 class PDEDetectorConstruction : public G4VUserDetectorConstruction
@@ -57,6 +58,7 @@ class PDEDetectorConstruction : public G4VUserDetectorConstruction
     PDEDetectorConstructionMessenger* fDetMessenger;
 
     G4LogicalVolume* fsipmDetectionBack;
+    SensitiveSIPM* fSingleSipm;
     // G4LogicalSkinSurface * f
     
 };

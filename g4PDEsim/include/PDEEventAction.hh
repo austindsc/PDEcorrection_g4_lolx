@@ -32,6 +32,7 @@ class PDEEventAction : public G4UserEventAction
     void AddOnSurface(){ fNonSurface++; }
     void AddInSurface(){ fNonBulk++; }
     void AddInBulk(){ fNinBulk++;}         // hitting SensitiveSIPM
+    void AddInBulkAfterPDE(){ fNinBulkAfterPDE++;} // after PDE
     
 
   protected:
@@ -47,6 +48,7 @@ class PDEEventAction : public G4UserEventAction
     G4int       fNonSurface;  // mc number of photons hitting detector (no efficiencies)
     G4int       fNonBulk;  // after efficiencies
     G4int       fNinBulk;     // after passing into bulk (hitting SiPM)
+    G4int       fNinBulkAfterPDE; // after PDE
     
 };
 

@@ -66,7 +66,7 @@ void PDEDetectorMaterials::SetDetectionMedium(G4String med){
 void PDEDetectorMaterials::BuildMaterials(){
   int verb;
   bool flipWL;
-  G4double scale1, scale2;
+  G4double scaleX, scaleY;
 
   G4cout << "\n-------- Build Materials() -----------\n" << G4endl;
   
@@ -75,18 +75,18 @@ void PDEDetectorMaterials::BuildMaterials(){
 
   // -------------------- Misc Materials --------------------//
   // -- Vacuum -- //
-  std::vector<G4double> photonEWorld = {hc/(1200*nm), hc/(100*nm)}; // set n=1 everywhere
+  std::vector<G4double> photonE_world = {hc/(1200*nm), hc/(100*nm)}; // set n=1 everywhere
   std::vector<G4double> nWorld = {1.00, 1.00};   
   std::vector<G4double> kWorld = {0.00, 0.00};   
   G4MaterialPropertiesTable *mpt_vacuum = new G4MaterialPropertiesTable();
   mVacuum = nist->FindOrBuildMaterial("G4_Galactic");
-  mpt_vacuum->AddProperty("RINDEX", photonEWorld, nWorld);
+  mpt_vacuum->AddProperty("RINDEX", photonE_world, nWorld);
   mVacuum->SetMaterialPropertiesTable(mpt_vacuum);
   
   // -- air -- //
   mAir = nist->FindOrBuildMaterial("G4_AIR");
   G4MaterialPropertiesTable *mptAir = new G4MaterialPropertiesTable();
-  mptAir->AddProperty("RINDEX", photonEWorld, nWorld);
+  mptAir->AddProperty("RINDEX", photonE_world, nWorld);
   mAir->SetMaterialPropertiesTable(mptAir);
 
   opSurf_Air = new G4OpticalSurface("air_opSurf", unified, polished, dielectric_dielectric);
@@ -123,7 +123,7 @@ void PDEDetectorMaterials::BuildMaterials(){
   mLXe = new G4Material("LXe", 54., 131.29 * g / mole, 3.020 * g / cm3);
   G4MaterialPropertiesTable * mptLXe = new G4MaterialPropertiesTable();
   std::vector<G4double> photonE_lxe, n_lxe;
-  OH::ReadAndFillArray("dataOptics/lxe_n_merged_wl.txt", photonE_lxe, n_lxe, verb = MG::GetVerbosity(), scale1 = nm, 1., flipWL = true); // scale um to nm, flip wavelengths to eV
+  OH::ReadAndFillArray("dataOptics/lxe_n_merged_wl.txt", photonE_lxe, n_lxe, verb = MG::GetVerbosity(), scaleX = nm, 1., flipWL = true); // scale um to nm, flip wavelengths to eV
   mptLXe->AddProperty("RINDEX", photonE_lxe, n_lxe);
   mLXe->SetMaterialPropertiesTable(mptLXe);
 
@@ -185,21 +185,23 @@ void PDEDetectorMaterials::BuildMaterials(){
   mQuartz = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
   
   std::vector<G4double> photonE_nQuartz, nQuartz, photonE_kQuartz, kQuartz;
-  OH::ReadAndFillArray("dataOptics/sio2_n_wl.txt", photonE_nQuartz, nQuartz, verb = MG::GetVerbosity(), scale1 = nm, 1., flipWL = true); // no scaling, flip wavelengths to eV
-  OH::ReadAndFillArray("dataOptics/sio2_k_wl.txt", photonE_kQuartz, kQuartz, verb = MG::GetVerbosity(), scale1 = nm, 1., flipWL = true); // no scaling, flip wavelengths to eV
+  OH::ReadAndFillArray("dataOptics/sio2_n_wl.txt", photonE_nQuartz, nQuartz, verb = MG::GetVerbosity(), scaleX = nm, 1., flipWL = true); // no scaling, flip wavelengths to eV
+  OH::ReadAndFillArray("dataOptics/sio2_k_wl.txt", photonE_kQuartz, kQuartz, verb = MG::GetVerbosity(), scaleX = nm, 1., flipWL = true); // no scaling, flip wavelengths to eV
 
   std::vector<G4double> photonE_absLQuartz, absLQuartz;
-  OH::ReadAndFillArray("dataOptics/quartz_absLength.txt", photonE_absLQuartz, absLQuartz, verb = MG::GetVerbosity(), scale1 = nm, scale2 = um, flipWL = true); // no scaling, flip wavelengths to eV
+  OH::ReadAndFillArray("dataOptics/quartz_absLength.txt", photonE_absLQuartz, absLQuartz, verb = MG::GetVerbosity(), scaleX = nm, scaleY = um, flipWL = true); // no scaling, flip wavelengths to eV
 
   // to absorb all photons in bulk
   // std::vector<G4double> kAbsorb = {100.00, 100.00};  
   // std::vector<G4double> quartzAbs_eV, quartzAbsLength;
 
   G4MaterialPropertiesTable *mptQuartz = new G4MaterialPropertiesTable();
-  // mptQuartz->AddProperty("ABSLENGTH", photonE_absLQuartz, absLQuartz);
+  if(DETECTORSETUP::GetQuartzABSstatus() && DETECTORSETUP::GetVisibleStatus()){
+    mptQuartz->AddProperty("ABSLENGTH", photonE_absLQuartz, absLQuartz);
+  }
 
   mptQuartz->AddProperty("RINDEX", photonE_nQuartz, nQuartz);
-  // mptQuartz->AddProperty("RINDEX", photonEWorld, {100, 100}); // testing
+  // mptQuartz->AddProperty("RINDEX", photonE_world, {100, 100}); // testing
   mQuartz->SetMaterialPropertiesTable(mptQuartz);
 
   // -- Quartz/SiO2 Surface -- //
@@ -210,8 +212,8 @@ void PDEDetectorMaterials::BuildMaterials(){
   // mpt_quartzSurf->AddProperty("REALRINDEX", photonE_nQuartz, nQuartz); // not dielectric
   // mpt_quartzSurf->AddProperty("IMAGINARYRINDEX", photonE_kQuartz, kQuartz);
   mpt_quartzSurf->AddProperty("RINDEX", photonE_nQuartz, nQuartz);
-  // mpt_quartzSurf->AddProperty("RINDEX", photonEWorld, {100, 100});
-  // mpt_quartzSurf->AddProperty("IMAGINARYRINDEX", photonEWorld, {4, 4});
+  // mpt_quartzSurf->AddProperty("RINDEX", photonE_world, {100, 100});
+  // mpt_quartzSurf->AddProperty("IMAGINARYRINDEX", photonE_world, {4, 4});
 
   opSurf_Quartz->SetMaterialPropertiesTable(mpt_quartzSurf);
 
@@ -244,19 +246,18 @@ void PDEDetectorMaterials::BuildMaterials(){
   std::string silicon_nFile = "dataOptics/silicon_merged_n_wl.txt";
   std::string silicon_kFile = "dataOptics/silicon_merged_k_wl.txt";
   // using amorphous
-  silicon_nFile = "dataOptics/silicon_n_amorphous_wl.txt";
-  silicon_kFile = "dataOptics/silicon_k_amorphous_wl.txt";
+  // silicon_nFile = "dataOptics/silicon_n_amorphous_wl.txt";
+  // silicon_kFile = "dataOptics/silicon_k_amorphous_wl.txt";
 
-  OH::ReadAndFillArray(silicon_nFile, photonE_nSilicon, nSi, verb = MG::GetVerbosity(), scale1 = nm, 1., flipWL = true); // scale um to nm, flip wavelengths to eV
-  OH::ReadAndFillArray(silicon_kFile, photonE_kSilicon, kSilicon, verb = MG::GetVerbosity() , scale1 = nm, 1., flipWL = true); // scale um to nm, flip wavelengths to eV
+  OH::ReadAndFillArray(silicon_nFile, photonE_nSilicon, nSi, verb = MG::GetVerbosity(), scaleX = nm, 1., flipWL = true); // scale um to nm, flip wavelengths to eV
+  OH::ReadAndFillArray(silicon_kFile, photonE_kSilicon, kSilicon, verb = MG::GetVerbosity() , scaleX = nm, 1., flipWL = true); // scale um to nm, flip wavelengths to eV
 
   G4MaterialPropertiesTable *mptSi = new G4MaterialPropertiesTable();
   mptSi->AddProperty("RINDEX", photonE_nSilicon, nSi);
 
   // cheating to fix group velocities, because n<1 is not allowed by G4
-  std::vector<G4double> photonE_gv = {1.0*eV, 12*eV};
   std::vector<G4double> gv = {CLHEP::c_light/2, CLHEP::c_light/2};
-  mptSi->AddProperty("GROUPVEL", photonE_gv, gv);
+  mptSi->AddProperty("GROUPVEL", photonE_world, gv);
   mSilicon->SetMaterialPropertiesTable(mptSi);
 
   // -- silicon surface --//
@@ -266,27 +267,42 @@ void PDEDetectorMaterials::BuildMaterials(){
   G4MaterialPropertiesTable *mpt_siliconSurf = new G4MaterialPropertiesTable();
   mpt_siliconSurf->AddProperty("REALRINDEX", photonE_nSilicon, nSi);
   mpt_siliconSurf->AddProperty("IMAGINARYRINDEX", photonE_kSilicon, kSilicon);
-  // mpt_siliconSurf->AddProperty("REALRINDEX", photonEWorld, {1000.0, 1000.0});
-  // mpt_siliconSurf->AddProperty("IMAGINARYRINDEX", photonEWorld, {1000.0, 1000.0});
-  mpt_siliconSurf->AddProperty("TRANSMITTANCE", photonE_perfectTrans, transPerfect); // needed
+  // mpt_siliconSurf->AddProperty("REFLECTIVITY", photonE_world, {0, 0}); // you can't do the absorptive scaling here. it won't calculate with index values
+  // mpt_siliconSurf->AddProperty("REALRINDEX", photonE_world, {1000.0, 1000.0});
+  // mpt_siliconSurf->AddProperty("IMAGINARYRINDEX", photonE_world, {1000.0, 1000.0});
+  
+  if(MG::GetTesting() == 1){
+    mpt_siliconSurf->AddProperty("EFFICIENCY", photonE_world, {1.0, 1.0}); // xx perfect efficiency (for non reflected photons)
+  } else {
+    mpt_siliconSurf->AddProperty("TRANSMITTANCE", photonE_perfectTrans, transPerfect); // needed to get the nonReflected photons inside the bulk to the backing (no abs)
+  }
 
   opSurf_silicon->SetMaterialPropertiesTable(mpt_siliconSurf);
 
-  // -- test Surface -- //
-  // testSurf = new G4OpticalSurface("testSurf", unified, polished, dielectric_dielectric);
-  // testSurf->SetSigmaAlpha(0.);
+  // -- correction surfaces -- //
+  G4double Rdiffuse = 0.17; // should be 0.17, from nEXO vacuum paper  
+  opSurf_myCorrector1_diffuserIn = new G4OpticalSurface("opSurf_myCorrector1_diffuserIn", unified, groundfrontpainted, dielectric_dielectric);
+  // groundfrontpainted only diffuse reflection. set by REFLECTIVITY
+  // absorption then is 1 - TRANSMITTANCE, default is T = 0
 
-  // G4MaterialPropertiesTable *mpt_test = new G4MaterialPropertiesTable();
-  // std::vector<G4double> e1 = {1.0*eV, 12*eV};
-  // std::vector<G4double> e2 = {0.0, 0.0};
-  // mpt_test->AddProperty("REALRINDEX", photonE_nQuartz, nQuartz);
-  // // mpt_test->AddProperty("IMAGINARYRINDEX", photonE_kQuartz, kQuartz);
-  // // mpt_test->AddProperty("IMAGINARYRINDEX", e1, e2);
-  // // // mpt_test->AddProperty("REALRINDEX", photonE_nSilicon, nSi);
-  // // // mpt_test->AddProperty("IMAGINARYRINDEX", photonE_kSilicon, kSilicon);
+  G4MaterialPropertiesTable *mpt_myCorrector1_diffuseIn = new G4MaterialPropertiesTable();  
+  mpt_myCorrector1_diffuseIn->AddProperty("TRANSMITTANCE", photonE_world, {1.0, 1.0}); // get everything in (after doing diffuse reflection), ABS = 1 - TRANSMITTANCE = 0
+  mpt_myCorrector1_diffuseIn->AddProperty("REFLECTIVITY", photonE_world, {Rdiffuse, Rdiffuse}); // how much diffusion do we want
+  opSurf_myCorrector1_diffuserIn->SetMaterialPropertiesTable(mpt_myCorrector1_diffuseIn);
 
-  // testSurf->SetMaterialPropertiesTable(mpt_test);
-  
+
+  opSurf_myCorrector2_absorptionOut = new G4OpticalSurface("opSurf_myCorrector2_absorptionOut", unified, polishedfrontpainted, dielectric_dielectric);
+  // std::vector<G4double> correctRwithAbs_transmission = {0., 0.}; // load in these values from my calculations
+  std::vector<G4double> xphotonE_TransCorrection, y_TransCorrection;
+  OH::ReadAndFillArray("dataOptics/effective_correction_transmission.txt", xphotonE_TransCorrection, y_TransCorrection, verb = MG::GetVerbosity() , scaleX = nm, scaleY = 1., flipWL = true); // scale um to nm, flip wavelengths to eV
+
+  G4MaterialPropertiesTable *mpt_myCorrector2_absorptionOut = new G4MaterialPropertiesTable();
+  mpt_myCorrector2_absorptionOut->AddProperty("TRANSMITTANCE", xphotonE_TransCorrection, y_TransCorrection); // absorb certain amount of SiPM reflections
+  mpt_myCorrector2_absorptionOut->AddProperty("REFLECTIVITY", photonE_world, {0., 0.}); // no reflections
+  opSurf_myCorrector2_absorptionOut->SetMaterialPropertiesTable(mpt_myCorrector2_absorptionOut);
+
+  // mpt_myCorrector2_absorptionOut->DumpTable();
+  // exit(0);
 
   return;
 }
