@@ -110,6 +110,7 @@ void PDESteppingAction::UserSteppingAction(const G4Step* step)
     // ------------------------------------------
   static G4ParticleDefinition* opticalphoton = G4OpticalPhoton::OpticalPhotonDefinition();
 
+ // xx adding
   G4OpBoundaryProcessStatus boundaryStatus           = Undefined;
   static G4ThreadLocal G4OpBoundaryProcess* boundary = nullptr;
   // find the boundary process only once
@@ -125,7 +126,6 @@ void PDESteppingAction::UserSteppingAction(const G4Step* step)
     }
   }
 
- // xx adding
   if(track->GetDefinition() == opticalphoton && MG::GetPDETesting() == MG::NewWay){ // Optical photon only
 
     // Was the photon absorbed by the absorption process
@@ -166,19 +166,13 @@ void PDESteppingAction::UserSteppingAction(const G4Step* step)
           break;
         }
         case Detection:  // Note, this assumes that the volume causing detection
-                         // is the photocathode because it is the only one with
+                         // is the sipm because it is the only one with
                          // non-zero efficiency
         {
           if(MG::GetVerbosity() > 1)G4cout << "inside - DET" << G4endl;
           // Trigger sensitive detector manually since photon is
           // absorbed but status was Detection
-          // G4SDManager* SDman = G4SDManager::GetSDMpointer();
-          // // G4String sdName    = "/LXeDet/pmtSD";
-          // SensitiveSIPM* sipmSD    = (SensitiveSIPM*) SDman->FindSensitiveDetector("SensitiveSIPM");
-          // if(pmtSD)
-          //   pmtSD->ProcessHits_boundary(theStep, nullptr);
-          // trackInformation->AddTrackStatusFlag(hitPMT);
-          (fDetCons->fSingleSipm)->ProcessHits_photonAtBoundary(step);
+          fDetCons->fSingleSipm->ProcessHits_photonAtBoundary(step);
           break;
         }
         // case FresnelReflection:
@@ -190,8 +184,8 @@ void PDESteppingAction::UserSteppingAction(const G4Step* step)
         //   trackInformation->IncReflections();
         //   fExpectedNextStatus = StepTooSmall;
         //   break;
-        // default:
-        //   break;
+        default:
+          break;
       }
     }
   }

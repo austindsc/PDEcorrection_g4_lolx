@@ -45,32 +45,51 @@ SensitiveSIPM::~SensitiveSIPM()
 {}
 
 G4bool SensitiveSIPM::ProcessHits(G4Step * step, G4TouchableHistory *ROhist){
-  // add this call to avoid double counting or accidental counting, if ProcessHits gets called
-  // by some other particle or action when using the NewWay
+  G4Track * track = step->GetTrack();
+
+  // photon hits backing (OLDWAY)
   if(MG::GetPDETesting() == MG::OldWay){
-    this->ProcessHits_photonAtBoundary(step);
+    track->SetTrackStatus(fStopAndKill);
+    this->CountPhotonIn(step);
     return true;
+  }
+  else if(MG::GetPDETesting() == MG::AbsWay){ // if the photon dies in the Si, count it
+
+    // option 1: wait for photon to die
+    // if (step->GetTrack()->GetTrackStatus() == fStopAndKill) {
+    //     // G4cout << "killing with dead track status" << G4endl;
+    //     this->CountPhotonIn(step);
+    //     return true;
+    // }
+
+    // option 2: kill photon once inside Si (requires ABSLength short) and both pre and post steps are equal
+    G4VPhysicalVolume* physPreVolume = step->GetPreStepPoint()->GetPhysicalVolume();
+    G4VPhysicalVolume* physPostVolume = step->GetPostStepPoint()->GetPhysicalVolume();
+    if(physPreVolume == physPostVolume){
+      track->SetTrackStatus(fStopAndKill);
+      this->CountPhotonIn(step);
+      // G4cout << "killing with step volumes" << G4endl;
+      return true;
+    }
   }
   return false;
 }
 
 G4bool SensitiveSIPM::ProcessHits_photonAtBoundary(const G4Step * step){
-  if(MG::GetVerbosity() > 1)G4cout << "ProcessHits_photonAtBounday" << G4endl;
-  
   G4Track * track = step->GetTrack();
+  if(MG::GetVerbosity() > 1)G4cout << "ProcessHits_photonAtBounday" << G4endl;
   if(track->GetDefinition() != G4OpticalPhoton::OpticalPhotonDefinition()) return false; // need to know if this is an optical photon
-  track->SetTrackStatus(fStopAndKill); // this is for vanilla method (called by ProcessHits())
-  
-  fEventAction->AddInBulk(); // photon touched
+  this->CountPhotonIn(step);
+  return true;
+}
 
-  G4StepPoint * preStepPoint = step->GetPreStepPoint(); // entering detector
-  G4StepPoint * postStepPoint = step->GetPostStepPoint(); // leaving detector?
-  
+inline G4bool SensitiveSIPM::CountPhotonIn(const G4Step * step){
+
+  G4StepPoint * preStepPoint = step->GetPreStepPoint();
   G4ThreeVector pPhoton = preStepPoint->GetMomentum();
   G4double wlen = fhc/pPhoton.mag(); //wavelength in nanometers 
 
-  // G4cout << "PDE at this is " << ovecPDE->Value((wlen)) << G4endl;
-  
+  fEventAction->AddInBulk(); // photon touched
   if(MG::GetVerbosity() >= 2)G4cout << "MC truth Hit! wl = " << wlen/nm << " nm" << G4endl;
 
   // With Efficiencies
@@ -78,10 +97,5 @@ G4bool SensitiveSIPM::ProcessHits_photonAtBoundary(const G4Step * step){
     if(MG::GetVerbosity() >= 2)G4cout << "PDE hit! wl = " << wlen/nm << " nm" <<G4endl;
     fEventAction->AddInBulkAfterPDE();
   }
-  
-  // G4ThreeVector posPhoton = preStepPoint->GetPosition();
-  // G4cout << "photon hit!: " << posPhoton << G4endl;
-  
-  
   return true;
 }

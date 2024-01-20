@@ -43,7 +43,7 @@
 ## process toggling (some outdated?) ##
 # probably don't want to control these from here
 /process/optical/processActivation OpRayleigh false
-/process/optical/processActivation OpAbsorption false
+/process/optical/processActivation OpAbsorption true
 /process/optical/processActivation OpBoundary true
 /process/optical/processActivation OpMieHG false
 /process/optical/processActivation OpWLS false

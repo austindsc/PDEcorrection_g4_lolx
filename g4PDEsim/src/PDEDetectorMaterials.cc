@@ -256,9 +256,13 @@ void PDEDetectorMaterials::BuildMaterials(){
   mptSi->AddProperty("RINDEX", photonE_nSilicon, nSi);
 
   // cheating to fix group velocities, because n<1 is not allowed by G4
-  std::vector<G4double> gv = {CLHEP::c_light/2, CLHEP::c_light/2};
+  std::vector<G4double> gv = {CLHEP::c_light*0.9, CLHEP::c_light*0.9};
   mptSi->AddProperty("GROUPVEL", photonE_world, gv);
+  
+  if(MG::GetPDETesting() == MG::AbsWay)mptSi->AddProperty("ABSLENGTH", photonE_world, {1.0*nm, 1.0*nm}); // xx cheating to get photons to stop in silicon
+
   mSilicon->SetMaterialPropertiesTable(mptSi);
+
 
   // -- silicon surface --//
   opSurf_silicon = new G4OpticalSurface("silicon_opSurf", unified, polished, dielectric_metal);
@@ -270,7 +274,7 @@ void PDEDetectorMaterials::BuildMaterials(){
   // mpt_siliconSurf->AddProperty("REFLECTIVITY", photonE_world, {0, 0}); // you can't do the absorptive scaling here. it won't calculate with index values
   // mpt_siliconSurf->AddProperty("REALRINDEX", photonE_world, {1000.0, 1000.0});
   // mpt_siliconSurf->AddProperty("IMAGINARYRINDEX", photonE_world, {1000.0, 1000.0});
-  
+
   if(MG::GetPDETesting() == MG::NewWay){
     mpt_siliconSurf->AddProperty("EFFICIENCY", photonE_world, {1.0, 1.0}); // xx perfect efficiency (for non reflected photons)
   } else {

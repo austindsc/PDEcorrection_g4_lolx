@@ -23,8 +23,9 @@ namespace MG{
   // toggling the PDE technique
   enum TestingMode {
     OldWay = 0,  // any photon touches photon backing calls ProcessHits
-    NewWay = 1   // photons that hit the bulk and aren't reflected (EFFICIENCY = 100)
+    NewWay = 1,   // photons that hit the bulk and aren't reflected (EFFICIENCY = 100)
                   // call custom processHits method in sensitive SiPM
+    AbsWay = 2    // use absorption in bulk to check some step logic (see ProcessHits)
   };
 
   // extern TestingMode testingPDE;

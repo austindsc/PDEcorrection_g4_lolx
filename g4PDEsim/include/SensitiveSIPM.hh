@@ -15,11 +15,14 @@ public:
   ~SensitiveSIPM();  
   G4PhysicsFreeVector * ovecPDE;
   
+  G4bool ProcessHits(G4Step * step, G4TouchableHistory *);
+  G4bool ProcessHits_photonAtBoundary(const G4Step * step);
+
+  inline G4bool CountPhotonIn(const G4Step * step);
+
 private:
   PDEEventAction * fEventAction;
 
-  G4bool ProcessHits(G4Step * step, G4TouchableHistory *);
-  G4bool ProcessHits_photonAtBoundary(const G4Step * step);
   
 
   G4double fhc;

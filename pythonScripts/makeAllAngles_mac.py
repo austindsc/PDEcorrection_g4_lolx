@@ -51,7 +51,7 @@ for med in mediumOptions:
 
   strProcesses = """
   /process/optical/processActivation OpRayleigh false
-  /process/optical/processActivation OpAbsorption false
+  /process/optical/processActivation OpAbsorption true
   /process/optical/processActivation OpBoundary true
   /process/optical/processActivation OpMieHG false
   /process/optical/processActivation OpWLS false

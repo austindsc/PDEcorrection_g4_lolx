@@ -11,17 +11,18 @@ namespace MG{
   // -- PDE toggling --//
   // default behaviour is newWay
   static TestingMode testingPDE = NewWay;
-  
+
   TestingMode GetPDETesting(){ return testingPDE; }
   void SetPDETesting(TestingMode a) { testingPDE = a; }
 }
 
 namespace DETECTORSETUP{
+
   // default values in here
   static bool buildWindow = false;
   static bool buildSurface = true;
   static bool turnOnQuartzAbs = false;
-  static bool makeVisible = true; // scale up the small things
+  static bool makeVisible = false; // scale up the small things
 
   bool GetWindowStatus(){ return buildWindow; }
   void SetWindowStatus(bool a){ buildWindow = a; }
