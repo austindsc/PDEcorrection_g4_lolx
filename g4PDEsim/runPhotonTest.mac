@@ -1,0 +1,46 @@
+# just one interation of the full .macro to test runtime
+
+# --- --- --- --- --- # 
+
+/vis/verbose 0
+/tracking/verbose 0
+/event/verbose 0
+/process/had/verbose 0
+/run/verbose 0
+/particle/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+/process/optical/verbose 0
+#/process/optical/scintillation/verbose 1
+
+/process/optical/processActivation OpRayleigh false
+/process/optical/processActivation OpBoundary true
+/process/optical/processActivation OpMieHG false
+/process/optical/processActivation OpWLS false
+  
+
+# --- --- --- --- --- # 
+
+/setDetector/myVerbosity 0
+/setMaterial/detectionMedium air
+# --- --- --- --- --- # 
+
+
+/run/initialize 
+
+# --- --- --- --- --- # 
+
+/gps/pos/type Point
+/gps/particle opticalphoton
+
+/gps/position 0 -9.5 1.5 cm
+/gps/number 10000000
+/gps/ang/minphi -90 deg
+/gps/ang/maxphi -90 deg
+# --- --- --- --- --- # 
+
+/gps/ene/mono 2. eV
+/gps/ang/mintheta 25 deg 
+/gps/ang/maxtheta 25 deg 
+/run/beamOn 1

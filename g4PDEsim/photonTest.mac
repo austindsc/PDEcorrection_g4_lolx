@@ -5,7 +5,7 @@
 #/gps/pos/shape Circle
 #/gps/pos/radius 2 cm
 
-/gps/number 1000
+/gps/number 100000
 
 #/gps/pos/centre 0. 0. -0.5 cm # photons out
 #/gps/direction 0. 1 1 
@@ -13,12 +13,12 @@
 /gps/pos/centre 0. -2. 0.75 cm # photons in
 #/gps/direction 0. 1. -1 
 
-/gps/ene/mono 1.5 eV
+/gps/ene/mono 5.5 eV
 #/gps/ene/mono 2 eV
 #/gps/ene/mono 7.1 eV # lXe peak
 
-/gps/ang/mintheta 15.0 deg 
-/gps/ang/maxtheta 15.0 deg
+/gps/ang/mintheta 25.0 deg 
+/gps/ang/maxtheta 25.0 deg
 
 /gps/ang/minphi -90.0 deg 
 /gps/ang/maxphi -90.0 deg

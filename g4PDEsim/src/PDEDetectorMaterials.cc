@@ -77,7 +77,6 @@ void PDEDetectorMaterials::BuildMaterials(){
   // -- Vacuum -- //
   std::vector<G4double> photonE_world = {hc/(1200*nm), hc/(100*nm)}; // set n=1 everywhere
   std::vector<G4double> nWorld = {1.00, 1.00};   
-  std::vector<G4double> kWorld = {0.00, 0.00};   
   G4MaterialPropertiesTable *mpt_vacuum = new G4MaterialPropertiesTable();
   mVacuum = nist->FindOrBuildMaterial("G4_Galactic");
   mpt_vacuum->AddProperty("RINDEX", photonE_world, nWorld);
@@ -165,6 +164,7 @@ void PDEDetectorMaterials::BuildMaterials(){
   // french paper (7, 5eV), other two from second paper
   std::vector<G4double> liq_cf4_photonE = {7*eV, 5*eV, 2*eV, 1*eV}; 
   std::vector<G4double> liq_cf4_n = {1.24, 1.225, 1.21, 1.2039};
+  // std::vector<G4double> liq_cf4_n = {5, 5, 5, 5}; // testing
 
   std::reverse(liq_cf4_photonE.begin(), liq_cf4_photonE.end());
   std::reverse(liq_cf4_n.begin(), liq_cf4_n.end());
