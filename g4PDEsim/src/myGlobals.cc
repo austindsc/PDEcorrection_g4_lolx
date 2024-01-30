@@ -19,7 +19,7 @@ namespace MG{
 namespace DETECTORSETUP{
 
   // default values in here
-  static bool buildWindow = false;
+  static bool buildWindow = true;
   static bool buildSurface = true;
   static bool turnOnQuartzAbs = false;
   static bool makeVisible = false; // scale up the small things

@@ -5,7 +5,7 @@
 #/gps/pos/shape Circle
 #/gps/pos/radius 2 cm
 
-/gps/number 100000
+/gps/number 500
 
 #/gps/pos/centre 0. 0. -0.5 cm # photons out
 #/gps/direction 0. 1 1 

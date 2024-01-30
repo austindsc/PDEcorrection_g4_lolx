@@ -171,7 +171,7 @@ G4VPhysicalVolume* PDEDetectorConstruction::Construct()
 
   //------ Doing Optical Surfaces ------//
 
-  new G4LogicalBorderSurface("opSurf_sibulk_backing", phys_sipmBulk, phys_sipmBack, (G4SurfaceProperty*) detMat->opSurf_perfectTrans); // bulk to detector (want perfect)
+  if(MG::GetPDETesting() == MG::OldWay)new G4LogicalBorderSurface("opSurf_sibulk_backing", phys_sipmBulk, phys_sipmBack, (G4SurfaceProperty*) detMat->opSurf_perfectTrans); // bulk to detector (want perfect)
   new G4LogicalSkinSurface("opSurf_siBulk", logic_sipmBulk, (G4SurfaceProperty*) detMat->opSurf_silicon); // silicon bulk, use metal dielectric with Transmission = 100
   // this does no refraction into the silicon bulk but thats okay
 
