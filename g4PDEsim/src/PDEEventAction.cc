@@ -3,6 +3,7 @@
 
 #include "PDEEventAction.hh"
 #include "PDERunAction.hh"
+#include "SensitiveSIPM.hh"
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
@@ -11,6 +12,8 @@
 #include "G4SystemOfUnits.hh"
 #include "G4AnalysisManager.hh"
 #include "G4RootAnalysisManager.hh"
+
+#include "G4SDManager.hh"
 
 #include "G4GeneralParticleSource.hh"
 
@@ -27,6 +30,8 @@ PDEEventAction::PDEEventAction(PDERunAction* runAction)
   fRunAction(runAction)
 {
   evMan = G4EventManager::GetEventManager();
+
+  fSingleSensitiveSiPM = nullptr;
 } 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -36,7 +41,7 @@ PDEEventAction::~PDEEventAction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void PDEEventAction::BeginOfEventAction(const G4Event*)
+void PDEEventAction::BeginOfEventAction(const G4Event* event)
 {    
   G4int evt = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
   if((MG::GetVerbosity() == 1 || evMan->GetVerboseLevel() > 0) && (evt < 100 || evt % 1000 == 0)){
@@ -49,6 +54,18 @@ void PDEEventAction::BeginOfEventAction(const G4Event*)
   fPhotonWavelength = hc/(tGun->GetCurrentSource()->GetParticleEnergy())/nm;
   fAngle = 180 - tGun->GetCurrentSource()->GetParticleMomentumDirection().theta()/deg;
   // no sure why I need -180 here. I guess Z is defined down for GPS but differently here
+
+  if(fSingleSensitiveSiPM == nullptr){
+    G4SDManager* SDman = G4SDManager::GetSDMpointer();
+    fSingleSensitiveSiPM = (SensitiveSIPM*) SDman->FindSensitiveDetector("SensitiveSIPM");
+  }
+
+  // G4cout << "eventID = " << evt << G4endl;
+  if(evt == 0){ // only for manual 1 event testing
+    fSingleSensitiveSiPM->ResetForFirstEvent();
+  }
+
+  ftouchPE = 0;
 
   fNonWindow = 0;
   fNonSurface = 0;
@@ -67,6 +84,7 @@ void PDEEventAction::PrintOutput(int verb){
     G4cout << "Nphoton = " << fNphotonFired << "\n";
     G4cout << "Nwindow = " << fNonWindow << "\n";
     G4cout << "Nsurface = " << fNonSurface << "\n";
+    G4cout << "Ntouching sensitive = " << ftouchPE << "\n";
     G4cout << "NBulk = " << fNonBulk << "\n";
     G4cout << "Ninside = " << fNinBulk << "\n";
     G4cout << "NafterPDE = " << fNinBulkAfterPDE << "\n";

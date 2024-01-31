@@ -164,18 +164,12 @@ void PDEDetectorMaterials::BuildMaterials(){
   // french paper (7, 5eV), other two from second paper
   std::vector<G4double> liq_cf4_photonE = {7*eV, 5*eV, 2*eV, 1*eV}; 
   std::vector<G4double> liq_cf4_n = {1.24, 1.225, 1.21, 1.2039};
-  // std::vector<G4double> liq_cf4_n = {5, 5, 5, 5}; // testing
 
   std::reverse(liq_cf4_photonE.begin(), liq_cf4_photonE.end());
   std::reverse(liq_cf4_n.begin(), liq_cf4_n.end());
 
-  // #if not USE_METAL_COMPLEX
-    mpt_liquidCF4->AddProperty("RINDEX", liq_cf4_photonE, liq_cf4_n);
-  // #else
-  //  mpt_liquidCF4->AddProperty("REALRINDEX", liq_cf4_photonE, liq_cf4_n);
-  // #endif
+  mpt_liquidCF4->AddProperty("RINDEX", liq_cf4_photonE, liq_cf4_n);
   mLiquidCF4->SetMaterialPropertiesTable(mpt_liquidCF4);
-  
   
   // -------------------- GAr --------------------//
   // 
@@ -217,23 +211,6 @@ void PDEDetectorMaterials::BuildMaterials(){
 
   opSurf_Quartz->SetMaterialPropertiesTable(mpt_quartzSurf);
 
-  // mpt_quartzSurf->DumpTable();
-
-  //-- SiPM surface quartz --//
-  // opSurf_surfaceQuartz = new G4OpticalSurface("quartzSiPM_opSurf");
-  // opSurf_surfaceQuartz->SetModel(unified);
-  // opSurf_surfaceQuartz->SetType(dielectric_metal);
-  // opSurf_surfaceQuartz->SetFinish(polished);
-  // opSurf_surfaceQuartz->SetSigmaAlpha(0.);
-
-  // G4MaterialPropertiesTable *mpt_quartzSiliconSurf = new G4MaterialPropertiesTable();
-  // // mpt_quartzSiliconSurf->AddProperty("RINDEX", photonE_nQuartz, nQuartz);
-  // mpt_quartzSiliconSurf->AddProperty("REALRINDEX", photonE_nQuartz, nQuartz);
-  // mpt_quartzSiliconSurf->AddProperty("IMAGINARYRINDEX", photonE_kQuartz, kQuartz);
-  // opSurf_surfaceQuartz->SetMaterialPropertiesTable(mpt_quartzSiliconSurf);
-  
-  // opSurf_surfaceQuartz = opSurf_Quartz; // use this if you want both quartz to be the same
-
   // no heavy quartz inside detector
   // mHeavyQuartz = nist->FindOrBuildMaterials("G4_MAGNESIUM_FLUORIDE");
   // mHeavyQuartz = nist->FindOrBuildMaterial("G4_BORON_OXIDE");
@@ -260,7 +237,7 @@ void PDEDetectorMaterials::BuildMaterials(){
   mptSi->AddProperty("GROUPVEL", photonE_world, gv);
   
   if(MG::GetPDETesting() == MG::AbsWay)mptSi->AddProperty("ABSLENGTH", photonE_world, {1.0*nm, 1.0*nm}); // xx cheating to get photons to stop in silicon
-
+  
   mSilicon->SetMaterialPropertiesTable(mptSi);
 
 
@@ -275,9 +252,9 @@ void PDEDetectorMaterials::BuildMaterials(){
   // mpt_siliconSurf->AddProperty("REALRINDEX", photonE_world, {1000.0, 1000.0});
   // mpt_siliconSurf->AddProperty("IMAGINARYRINDEX", photonE_world, {1000.0, 1000.0});
 
-  if(MG::GetPDETesting() == MG::NewWay){
+  if(MG::GetPDETesting() == MG::StepWay){ // this breaks using other strategy /xx
     mpt_siliconSurf->AddProperty("EFFICIENCY", photonE_world, {1.0, 1.0}); // xx perfect efficiency (for non reflected photons)
-  } else {
+  } else if (MG::GetPDETesting() == MG::AbsWay || MG::GetPDETesting() == MG::OldWay) {
     mpt_siliconSurf->AddProperty("TRANSMITTANCE", photonE_perfectTrans, transPerfect); // needed to get the nonReflected photons inside the bulk to the backing (no abs)
   }
 

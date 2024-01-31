@@ -16,6 +16,7 @@ SensitiveSIPM::SensitiveSIPM(G4String name) : G4VSensitiveDetector(name )
 {
   fEventAction = (PDEEventAction *) G4RunManager::GetRunManager()->GetUserEventAction();
   fhc = CLHEP::h_Planck * CLHEP::c_light;
+  fLastTrackID = -1; // so don't miss first track
 
   // adding PDE
   ovecPDE = new G4PhysicsFreeVector(false);
@@ -25,13 +26,19 @@ SensitiveSIPM::SensitiveSIPM(G4String name) : G4VSensitiveDetector(name )
   OH::LoadTxt_OrderedVector("dataOptics/effective_internalPDE.txt", ovecPDE, MG::GetVerbosity(), nm, 1.);
   if(MG::GetVerbosity() > 1) ovecPDE->DumpValues();
 
-  if(MG::GetPDETesting() == MG::NewWay){
-    G4cout << "------------------------ SiPM Implementation: NEWWAY ------------------------\n"
+  if(MG::GetPDETesting() == MG::StepWay){
+    G4cout << "------------------------ SiPM Implementation: StepWay ------------------------\n"
     "using custom ProcessHits_photonAtBoundary, and defining efficiency for SiPM bulk."
     "Then no backing SiPM is required. Stepping action has to check for optical photon"
     "DETECTED status and manually call ProcessHits_photonAtBoundary.\n"
     "------------------------  ------------------------" << G4endl;
-  } else if(MG::GetPDETesting() == MG::OldWay) {
+  } else if(MG::GetPDETesting() == MG::AbsWay){
+    G4cout << "------------------------ SiPM Implementation: AbsWay ------------------------\n"
+    "define a short ABSLENGTH for Silicon, and use normal ProcessHits in sensitive detector"
+    "Then no backing SiPM is required. ProcessHits() checks if preVolume==postVolume and kills the track."
+    "This calls countPhotonTouching and countPhotonIn \n"
+    "------------------------  ------------------------" << G4endl; 
+  }else if(MG::GetPDETesting() == MG::OldWay) {
     G4cout << 
     "------------------------ SiPM Implementation: OLDWAY ------------------------\n"
     "using normal ProcessHits in sensitive detector, which requires a second backing detector to be defined."
@@ -46,6 +53,10 @@ SensitiveSIPM::~SensitiveSIPM()
 
 G4bool SensitiveSIPM::ProcessHits(G4Step * step, G4TouchableHistory *ROhist){
   G4Track * track = step->GetTrack();
+  
+  // G4cout << "calling touching" << G4endl;
+  this->CountPhotonTouching(track->GetTrackID()); // if photon touches the surface of the SiPM
+  
 
   // photon hits backing (OLDWAY)
   if(MG::GetPDETesting() == MG::OldWay){
@@ -75,15 +86,28 @@ G4bool SensitiveSIPM::ProcessHits(G4Step * step, G4TouchableHistory *ROhist){
   return false;
 }
 
+// do a bit of logic here to avoid double counting twice reflected photons
+G4bool SensitiveSIPM::CountPhotonTouching(G4int trackID){
+  // G4cout << "in photon Touching" << G4endl;  
+
+  if(trackID == fLastTrackID) return false;
+  else{
+    fLastTrackID = trackID;
+    fEventAction->AddTouchingBulk();
+    return true;
+  }
+}
+
 G4bool SensitiveSIPM::ProcessHits_photonAtBoundary(const G4Step * step){
   G4Track * track = step->GetTrack();
   if(MG::GetVerbosity() > 1)G4cout << "ProcessHits_photonAtBounday" << G4endl;
   if(track->GetDefinition() != G4OpticalPhoton::OpticalPhotonDefinition()) return false; // need to know if this is an optical photon
+  this->CountPhotonTouching(track->GetTrackID()); // if photon touches the surface of the SiPM
   this->CountPhotonIn(step);
   return true;
 }
 
-inline G4bool SensitiveSIPM::CountPhotonIn(const G4Step * step){
+G4bool SensitiveSIPM::CountPhotonIn(const G4Step * step){
 
   G4StepPoint * preStepPoint = step->GetPreStepPoint();
   G4ThreeVector pPhoton = preStepPoint->GetMomentum();

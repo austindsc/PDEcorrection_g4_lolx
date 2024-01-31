@@ -26,6 +26,7 @@
 #include "G4Element.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4UserLimits.hh"
+#include "G4SDManager.hh"
 
 #include "PDEDetectorConstruction.hh"
 #include "PDEDetectorConstructionMessenger.hh"
@@ -65,6 +66,8 @@ void PDEDetectorConstruction::ConstructSDandField(){
     fSingleSipm = ssipm; // for passing to stepping action later, to avoid lookup each time
     fsipmDetectionBack->SetSensitiveDetector(ssipm); // this depends on MG options (pointers are set at the bottom of Construct())
     
+    G4SDManager* SDman = G4SDManager::GetSDMpointer();
+    SDman->AddNewDetector(ssipm);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -136,21 +139,20 @@ G4VPhysicalVolume* PDEDetectorConstruction::Construct()
   G4ThreeVector moveSipmBack = G4ThreeVector(0, 0, -2*solid_sipmBulk->GetZHalfLength()-solid_sipmBack->GetZHalfLength());
   // sipm wrt origin of solid_BoxPackage is y, z to rotate
 
-  G4VPhysicalVolume* phys_sipmBack = new G4PVPlacement(0, moveSipmBack, logic_sipmBack, "phys_sipmBack",
-                    logic_world,         // mother volume
-                    false, 0, checkOverlaps);
+  G4VPhysicalVolume* phys_sipmBack = nullptr;
+  if(MG::GetPDETesting() == MG::OldWay){
+    phys_sipmBack = new G4PVPlacement(0, moveSipmBack, logic_sipmBack, "phys_sipmBack", logic_world, false, 0, checkOverlaps);
+  }
 
-  //-- silicon surface (Quartz) --//
-  G4VPhysicalVolume* phys_quartzWindow = NULL;
-  G4VPhysicalVolume* phys_sipmSurface = NULL;
+  //-- silicon surface, extra medium on top (Quartz) --//
+  G4VPhysicalVolume* phys_quartzWindow = nullptr;
+  G4VPhysicalVolume* phys_sipmSurface = nullptr;
+  G4VPhysicalVolume* phys_additionalBox = nullptr;
 
   G4Box * solid_sipmSurface = new G4Box("solid_sipmSurface", 0.5*sipmXY, 0.5*sipmXY, 0.5*sipmSurfaceThick);
   G4LogicalVolume * logic_sipmSurface = new G4LogicalVolume(solid_sipmSurface, detMat->mQuartz, "logic_sipmSurface");
   logic_sipmSurface->SetVisAttributes(filter_yellow);
-
   G4ThreeVector moveSurface = G4ThreeVector(0, 0, solid_sipmSurface->GetZHalfLength()); // sipm wrt origin of solid_BoxPackage is y, z to rotate
-
-  if(DETECTORSETUP::GetSurfaceStatus()){ phys_sipmSurface = new G4PVPlacement(0, moveSurface, logic_sipmSurface, "phys_sipmSurface", logic_world, false, 0, checkOverlaps); }
 
   // ---- Additional Box for correction----//
   G4Box* solid_additionalBox = new G4Box("solid_additionalBox", 0.5 * sipmXY, 0.5 * sipmXY, 0.5 * additionalBoxThick);
@@ -159,7 +161,11 @@ G4VPhysicalVolume* PDEDetectorConstruction::Construct()
 
   // G4double extraBoxBuffer = 0*mm;
   G4ThreeVector moveAdditionalBox = G4ThreeVector(0, 0, 2*solid_sipmSurface->GetZHalfLength() + solid_additionalBox->GetZHalfLength());
-  G4VPhysicalVolume* phys_additionalBox = new G4PVPlacement(0, moveAdditionalBox, logic_additionalBox, "phys_additionalBox", logic_world, false, 0, checkOverlaps);
+
+  if(DETECTORSETUP::GetSurfaceStatus()){
+    phys_sipmSurface = new G4PVPlacement(0, moveSurface, logic_sipmSurface, "phys_sipmSurface", logic_world, false, 0, checkOverlaps);
+    phys_additionalBox = new G4PVPlacement(0, moveAdditionalBox, logic_additionalBox, "phys_additionalBox", logic_world, false, 0, checkOverlaps);
+  }
 
   // ---- Top Quartz window ----//
   G4Box * solid_quartzWindow = new G4Box("solid_quartzWindow", 0.5*sipmXY, 0.5*sipmXY, 0.5*quartzWindowThick);
@@ -167,18 +173,26 @@ G4VPhysicalVolume* PDEDetectorConstruction::Construct()
   logic_quartzWindow->SetVisAttributes(quartz_white);
   G4ThreeVector moveQuartzWindow = G4ThreeVector(0, 0, quartzWindowGap + solid_quartzWindow->GetZHalfLength() + 2*solid_sipmSurface->GetZHalfLength());
 
-  if(DETECTORSETUP::GetWindowStatus()){ phys_quartzWindow = new G4PVPlacement(0, moveQuartzWindow, logic_quartzWindow, "phys_quartzWindow", logic_world, false, 0, checkOverlaps); }
+  if(DETECTORSETUP::GetWindowStatus()){
+    phys_quartzWindow = new G4PVPlacement(0, moveQuartzWindow, logic_quartzWindow, "phys_quartzWindow", logic_world, false, 0, checkOverlaps);
+  }
 
   //------ Doing Optical Surfaces ------//
 
-  if(MG::GetPDETesting() == MG::OldWay)new G4LogicalBorderSurface("opSurf_sibulk_backing", phys_sipmBulk, phys_sipmBack, (G4SurfaceProperty*) detMat->opSurf_perfectTrans); // bulk to detector (want perfect)
+  if(MG::GetPDETesting() == MG::OldWay){
+    new G4LogicalBorderSurface("opSurf_sibulk_backing", phys_sipmBulk, phys_sipmBack, (G4SurfaceProperty*) detMat->opSurf_perfectTrans); // bulk to detector (want perfect)
+  }
+  
+  // silicon bulk
   new G4LogicalSkinSurface("opSurf_siBulk", logic_sipmBulk, (G4SurfaceProperty*) detMat->opSurf_silicon); // silicon bulk, use metal dielectric with Transmission = 100
   // this does no refraction into the silicon bulk but thats okay
 
   // doing my PDE correction
+  if(DETECTORSETUP::GetSurfaceStatus()){
   new G4LogicalBorderSurface("opSurf_myCorrector1_in", physWorld, phys_additionalBox, (G4SurfaceProperty*) detMat->opSurf_myCorrector1_diffuserIn);
   // because this is a border, photons going 'backwards' or exiting/reflected off the SiPM just go like normal (they don't see this border).
   new G4LogicalBorderSurface("opSurf_myCorrector2_out", phys_additionalBox, physWorld, (G4SurfaceProperty*) detMat->opSurf_myCorrector2_absorptionOut);
+  }
 
   /*
   ==== Final Implementation description ====
@@ -244,14 +258,15 @@ G4VPhysicalVolume* PDEDetectorConstruction::Construct()
 
   //------ IMPORTANT ------//
   // setting items for usage elsewhere
-  if(MG::GetPDETesting() == MG::NewWay)fsipmDetectionBack = logic_sipmBulk; //xx detect on the front of the sipm bulk
-  else if(MG::GetPDETesting() == MG::AbsWay)fsipmDetectionBack = logic_sipmBulk; //xx detect on the front of the sipm bulk
+  if(MG::GetPDETesting() == MG::StepWay)fsipmDetectionBack = logic_sipmBulk; //xx detect on the front of the sipm bulk
+  else if(MG::GetPDETesting() == MG::AbsWay)fsipmDetectionBack = logic_sipmBulk; //xx detect inside the sipm bulk
   else if(MG::GetPDETesting() == MG::OldWay){ fsipmDetectionBack = logic_sipmBack; }// very important!
   
   fBulkZ = phys_sipmBulk->GetTranslation().z();
   if(phys_sipmSurface) fSurfaceZ = phys_sipmSurface->GetTranslation().z();
   if(phys_quartzWindow) fWindowZ = phys_quartzWindow->GetTranslation().z();
 
+  // for use in TrackingAction
   fLogBulk = logic_sipmBulk;
   fLogSurface = logic_sipmSurface;
   fLogWindow = logic_quartzWindow;

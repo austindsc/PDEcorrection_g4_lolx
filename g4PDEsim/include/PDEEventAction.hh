@@ -9,6 +9,7 @@
 
 class PDERunAction;
 class G4EventManager;
+class SensitiveSIPM;
 
 /// Event action class
 ///
@@ -31,18 +32,22 @@ class PDEEventAction : public G4UserEventAction
     void AddOnWindow(){ fNonWindow++; }
     void AddOnSurface(){ fNonSurface++; }
     void AddInSurface(){ fNonBulk++; }
+    void AddTouchingBulk(){ ftouchPE++;}
     void AddInBulk(){ fNinBulk++;}         // hitting SensitiveSIPM
     void AddInBulkAfterPDE(){ fNinBulkAfterPDE++;} // after PDE
     
 
   protected:
     G4EventManager * evMan;
+    SensitiveSIPM * fSingleSensitiveSiPM;
     
     PDERunAction* fRunAction;
 
     G4int       fNphotonFired;
     G4double    fPhotonWavelength; // what was shot
     G4double    fAngle; // angle from gun
+
+    G4int       ftouchPE;
 
     G4int       fNonWindow;   // mc number of photons hitting window (no efficiencies)
     G4int       fNonSurface;  // mc number of photons hitting detector (no efficiencies)

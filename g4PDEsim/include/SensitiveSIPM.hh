@@ -17,12 +17,15 @@ public:
   
   G4bool ProcessHits(G4Step * step, G4TouchableHistory *);
   G4bool ProcessHits_photonAtBoundary(const G4Step * step);
+  void ResetForFirstEvent(){fLastTrackID = -1;}
 
-  inline G4bool CountPhotonIn(const G4Step * step);
+  G4bool CountPhotonTouching(G4int trackID);
+  G4bool CountPhotonIn(const G4Step * step);
 
 private:
   PDEEventAction * fEventAction;
-
+  G4int fLastTrackID; // use this to track photons from the same track (avoid double counting reflections)
+  G4int fLastEventID; // use this for manual testing (new runs have same first event number)
   
 
   G4double fhc;

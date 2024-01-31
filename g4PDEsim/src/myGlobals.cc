@@ -9,8 +9,8 @@ namespace MG{
   int GetVerbosity(){ return myVerbose; }
 
   // -- PDE toggling --//
-  // default behaviour is newWay
-  static TestingMode testingPDE = NewWay;
+  // default behaviour is absway
+  static TestingMode testingPDE = AbsWay;
 
   TestingMode GetPDETesting(){ return testingPDE; }
   void SetPDETesting(TestingMode a) { testingPDE = a; }
@@ -19,10 +19,10 @@ namespace MG{
 namespace DETECTORSETUP{
 
   // default values in here
-  static bool buildWindow = true;
-  static bool buildSurface = true;
+  static bool buildWindow = false;
+  static bool buildSurface = true; // this also turns off correction borders
   static bool turnOnQuartzAbs = false;
-  static bool makeVisible = false; // scale up the small things
+  static bool makeVisible = true; // scale up the small things
 
   bool GetWindowStatus(){ return buildWindow; }
   void SetWindowStatus(bool a){ buildWindow = a; }

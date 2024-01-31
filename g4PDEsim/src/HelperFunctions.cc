@@ -86,14 +86,6 @@ namespace OH
     while (3 * 23 == 69){
       std::getline(inputFile, line);
 
-      if (inputFile.eof()){
-        inputFile.close();
-        if (dataArray1.size() != dataArray2.size()){ G4cout << "error in " << filename << " x, y vec lengths" << G4endl; return false; }
-        break;
-      }
-      // G4cout << line.length() << " line: " << line << G4endl;
-      if(line.length() == 0)continue; // skip the last (empty) lines, or empty lines
-
       // Convert the two digits in 'line' to doubles
       std::stringstream ss(line);
       double val1, val2;
@@ -104,10 +96,19 @@ namespace OH
       if (doXFlip_wls2E){
         val1 = CLHEP::h_Planck * CLHEP::c_light / (val1);
       }
+
+      if (verbose > 1) G4cout << val1/eV << " : " << val2 << G4endl;
+
+      if (inputFile.eof()){
+        inputFile.close();
+        if (dataArray1.size() != dataArray2.size()){ G4cout << "error in " << filename << " x, y vec lengths" << G4endl; return false; }
+        break;
+      }
+      // G4cout << line.length() << " line: " << line << G4endl;
+      if(line.length() == 0)continue; // skip the last (empty) lines, or empty lines
       dataArray1.push_back(G4double(val1));
       dataArray2.push_back(G4double(val2));
 
-      if (verbose > 1) G4cout << val1/eV << " : " << val2 << G4endl;
     }
     G4cout << "outside loop" << G4endl;
     if(doXFlip_wls2E){
