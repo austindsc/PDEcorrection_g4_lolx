@@ -24,9 +24,7 @@ public:
 
 private:
   PDEEventAction * fEventAction;
-  G4int fLastTrackID; // use this to track photons from the same track (avoid double counting reflections)
-  G4int fLastEventID; // use this for manual testing (new runs have same first event number)
-  
+  G4int fLastTrackID; // use this to track photons from the same track (avoid double counting reflections)  
 
   G4double fhc;
 

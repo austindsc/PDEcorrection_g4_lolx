@@ -1,4 +1,4 @@
-wl	n - from refractive info database - crystalline
+wl	n - from refractive info database - Aspnes - crystalline
 0.2066	1.010
 0.2101	1.083
 0.2138	1.133

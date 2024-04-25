@@ -1,4 +1,4 @@
-# first line is ignored. Wavelength (nm), PDE x 100
+# first line is ignored. Wavelength (nm), PDE x 100. we think its 75um pitch, not 5V. We don't know what exactly this is from
 122.41153213616300	16.878745619255900
 125.83980953236600	18.91947367480810
 128.7160761613840	20.870875905521700

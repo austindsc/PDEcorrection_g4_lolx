@@ -1,4 +1,4 @@
-wl  n - from refractive info database - Pierce data is amorphous
+wl  n - from refractive info database - Pierce (amorphous)
 1.033E-1  3.27E-1
 1.078E-1  3.63E-1
 1.127E-1  3.92E-1

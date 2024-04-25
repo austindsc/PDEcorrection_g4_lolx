@@ -1,4 +1,4 @@
-wl  k - from 
+wl  k - from database - Pierce - amorphous
 1.033E-1  7.26E-1
 1.078E-1  8.47E-1
 1.127E-1  9.46E-1
