@@ -1,0 +1,2 @@
+# wavelength (nm), reflectivity for VUV4 in LXe from Munster paper at a single angle, wavelength
+178.000000	0.325000
